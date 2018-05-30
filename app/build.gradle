@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.mashazavolnyuk.musicwavejava"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -47,5 +47,7 @@ dependencies {
 
     // optional - Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
+
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 
 }
