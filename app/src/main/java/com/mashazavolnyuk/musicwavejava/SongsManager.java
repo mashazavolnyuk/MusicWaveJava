@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.mashazavolnyuk.musicwavejava.model.Song;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -26,17 +28,19 @@ public class SongsManager {
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
         Cursor songCursor = contentResolver.query(songUri, projection, selection, null, null);
-        Song.SongBuilder songBuilder = new Song.SongBuilder();
-        if (songCursor != null && songCursor.moveToFirst()) {
-            do {
-                String currentName = songCursor.getString(4);
-                String currentTitle = songCursor.getString(2);
-                songBuilder.setName(currentName);
-                songBuilder.setTitle(currentTitle);
-                Song song = songBuilder.build();
-                songsList.add(song);
-            } while (songCursor.moveToNext());
-        }
+//        Song.SongBuilder songBuilder = new Song.SongBuilder();
+//        if (songCursor != null && songCursor.moveToFirst()) {
+//            do {
+//                long currentId = songCursor.getLong(0);
+//                String currentName = songCursor.getString(4);
+//                String currentTitle = songCursor.getString(2);
+//                songBuilder.setId(currentId);
+//                songBuilder.setName(currentName);
+//                songBuilder.setTitle(currentTitle);
+//                Song song = songBuilder.build();
+                //songsList.add(song);
+            //} while (songCursor.moveToNext());
+        //}
         Objects.requireNonNull(songCursor).close();
         return songsList;
     }
