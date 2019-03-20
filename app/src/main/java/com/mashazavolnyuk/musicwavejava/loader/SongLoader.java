@@ -28,7 +28,7 @@ public class SongLoader {
             MediaStore.Audio.AudioColumns.ARTIST,// 10
     };
 
-    //method to retrieve song info from device
+    //method to retrieve item_song info from device
     public static ArrayList<Song> getSongList(@NonNull Context context) {
         ArrayList<Song> songList = new ArrayList<>();
         //query external audio
