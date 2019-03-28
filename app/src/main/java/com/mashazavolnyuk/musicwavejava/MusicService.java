@@ -1,223 +1,387 @@
 package com.mashazavolnyuk.musicwavejava;
 
-
-import android.Manifest;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
 import com.mashazavolnyuk.musicwavejava.model.Song;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
+
 
 public class MusicService extends Service
-        implements
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+        implements MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
+        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,
+        AudioManager.OnAudioFocusChangeListener {
 
-    //media player
-    private MediaPlayer player;
-    //item_song list
-    private ArrayList<Song> songs;
-    //current position
-    private int songPosn;
-    //binder
+    private String TAG = "MusicService";
+
+    public static final String MUSIC_WAVE_PACKAGE_NAME = "com.kabouzeid.gramophone";
+
+    public static final String ACTION_PLAY = "com.mashazavolnyuk.musicwavejava.ACTION_PLAY";
+    public static final String ACTION_RESUME = "com.mashazavolnyuk.musicwavejava.ACTION_RESUME";
+    public static final String ACTION_PAUSE = "com.mashazavolnyuk.musicwavejava.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "com.mashazavolnyuk.musicwavejava.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "com.mashazavolnyuk.musicwavejava.ACTION_NEXT";
+    public static final String ACTION_STOP = "com.mashazavolnyuk.musicwavejava.ACTION_STOP";
+
+
+    // do not change these three strings as it will break support with other apps (e.g. last.fm scrobbling)
+    public static final String META_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".metachanged";
+    public static final String QUEUE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".queuechanged";
+    public static final String PLAY_STATE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".playstatechanged";
+
+    public static final String REPEAT_MODE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".repeatmodechanged";
+    public static final String SHUFFLE_MODE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".shufflemodechanged";
+    public static final String MEDIA_STORE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".mediastorechanged";
+
+    public static final String SAVED_POSITION = "POSITION";
+    public static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
+    public static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
+    public static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
+
+    public static final int RELEASE_WAKELOCK = 0;
+    public static final int TRACK_ENDED = 1;
+    public static final int TRACK_WENT_TO_NEXT = 2;
+    public static final int PLAY_SONG = 3;
+    public static final int PREPARE_NEXT = 4;
+    public static final int SET_POSITION = 5;
+    private static final int FOCUS_CHANGE = 6;
+    private static final int DUCK = 7;
+    private static final int UNDUCK = 8;
+    public static final int RESTORE_QUEUES = 9;
+
+    public static final int SHUFFLE_MODE_NONE = 0;
+    public static final int SHUFFLE_MODE_SHUFFLE = 1;
+
+    public static final int REPEAT_MODE_NONE = 0;
+    public static final int REPEAT_MODE_ALL = 1;
+    public static final int REPEAT_MODE_THIS = 2;
+
+
+    private AudioManager audioManager;
+
+    private MediaPlayer mediaPlayer;
+    //path to the audio file
+    private String mediaPath;
+
+    //MediaSession
+    private MediaSessionManager mediaSessionManager;
+    private MediaSessionCompat mediaSession;
+    private MediaControllerCompat.TransportControls transportControls;
+
+    //Used to pause/resume MediaPlayer
+    private int resumePosition;
+
+    private List<Song> songList = new ArrayList<>();
     private final IBinder musicBind = new MusicBinder();
-    //title of current item_song
-    private String songTitle = "";
-    //notification id
-    private static final int NOTIFY_ID = 1;
-    //shuffle flag and random
-    private boolean shuffle = false;
-    private Random rand;
 
-    public void onCreate() {
-        //create the service
-        super.onCreate();
-        //initialize position
-        songPosn = 0;
-        //random
-        rand = new Random();
-        //create player
-        player = new MediaPlayer();
-        //initialize
-        initMusicPlayer();
-    }
 
-    public void initMusicPlayer() {
-        if(checkPermission(getApplicationContext())){
-            player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-        }
-        player.setOnPreparedListener(this);
-        player.setOnCompletionListener(this);
-        player.setOnErrorListener(this);
-    }
-
-    //pass item_song list
-    public void setList(ArrayList<Song> theSongs) {
-        songs = theSongs;
-    }
-
-    //binder
     public class MusicBinder extends Binder {
-        MusicService getService() {
+        @NonNull
+        public MusicService getService() {
             return MusicService.this;
         }
     }
 
-    //activity will bind to service
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_NOT_STICKY;
+    }
+
+    private void handleIncomingActions(Intent playbackAction) {
+        if (playbackAction == null || playbackAction.getAction() == null) return;
+
+        String actionString = playbackAction.getAction();
+        if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
+//            transportControls.play();
+            playMedia();
+        } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
+            // transportControls.pause();
+            pauseMedia();
+        } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
+            //  transportControls.skipToNext();
+        } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
+            //  transportControls.skipToPrevious();
+        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
+            //  transportControls.stop();
+            stopMedia();
+        }
+    }
+
+
+    private void initMediaSession() {
+        if (mediaSessionManager != null) return; //mediaSessionManager exists
+        mediaSessionManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
+        // Create a new MediaSession
+        mediaSession = new MediaSessionCompat(getApplicationContext(), "AudioPlayer");
+        //Get MediaSessions transport controls
+        transportControls = mediaSession.getController().getTransportControls();
+        //set MediaSession -> ready to receive media commands
+        mediaSession.setActive(true);
+        //indicate that the MediaSession handles transport control commands
+        // through its MediaSessionCompat.Callback.
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        // Attach Callback to receive MediaSession updates
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            // Implement callbacks
+            @Override
+            public void onPlay() {
+                super.onPlay();
+
+                resumeMedia();
+//                buildNotification(PlaybackStatus.PLAYING);
+            }
+
+            @Override
+            public void onPause() {
+                super.onPause();
+
+                pauseMedia();
+//                buildNotification(PlaybackStatus.PAUSED);
+            }
+
+            @Override
+            public void onSkipToNext() {
+                super.onSkipToNext();
+
+//                skipToNext();
+//                updateMetaData();
+//                buildNotification(PlaybackStatus.PLAYING);
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                super.onSkipToPrevious();
+//
+//                skipToPrevious();
+//                updateMetaData();
+//                buildNotification(PlaybackStatus.PLAYING);
+            }
+
+            @Override
+            public void onStop() {
+                super.onStop();
+//                removeNotification();
+                //Stop the service
+                stopSelf();
+            }
+
+            @Override
+            public void onSeekTo(long position) {
+                super.onSeekTo(position);
+            }
+        });
+    }
+
+
+    private void initMediaPlayer() {
+        if (mediaPlayer == null) {
+            mediaPlayer = new MediaPlayer();
+        }
+        //Set up MediaPlayer event listeners
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnBufferingUpdateListener(this);
+        mediaPlayer.setOnSeekCompleteListener(this);
+        mediaPlayer.setOnInfoListener(this);
+        //Reset so that the MediaPlayer is not pointing to another data source
+        mediaPlayer.reset();
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            // Set the data source to the mediaPath location
+            if (mediaPath != null) {
+                mediaPlayer.setDataSource(mediaPath);
+                mediaPlayer.prepareAsync();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            stopSelf();
+        }
+    }
+
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return musicBind;
     }
 
-    //release resources when unbind
     @Override
-    public boolean onUnbind(Intent intent) {
-        player.stop();
-        player.release();
-        return false;
-    }
-
-    //play a item_song
-    public void playSong() {
-        //play
-        player.reset();
-        //get item_song
-        Song playSong = songs.get(songPosn);
-        //get title
-        songTitle = playSong.getTitle();
-        //get id
-        long currSong = playSong.getId();
-        //set uri
-        Uri trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                currSong);
-        //set the data source
-        try {
-            player.setDataSource(getApplicationContext(), trackUri);
-        } catch (Exception e) {
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            stopMedia();
+            mediaPlayer.release();
         }
-        player.prepareAsync();
+        removeAudioFocus();
     }
 
-    //set the item_song
-    public void setSong(int songIndex) {
-        songPosn = songIndex;
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        //Invoked when the audio focus of the system is updated.
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                // resume playback
+                if (mediaPlayer == null) initMediaPlayer();
+                else if (!mediaPlayer.isPlaying()) mediaPlayer.start();
+                mediaPlayer.setVolume(1.0f, 1.0f);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                // Lost focus for an unbounded amount of time: stop playback and release media player
+                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                // Lost focus for a short time, but we have to stop
+                // playback. We don't release the media player because playback
+                // is likely to resume
+                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Lost focus for a short time, but it's ok to keep playing
+                // at an attenuated level
+                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
+                break;
+        }
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        Log.d("me", "percent" + percent);
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if(checkPermission(getApplicationContext())){
-            if (player.getCurrentPosition() > 0) {
-                mp.reset();
-                playNext();
-            }
-        }
-        //check if playback has reached the end of a track
+        stopMedia();
+        //stop the service
+        stopSelf();
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        if (checkPermission(getApplicationContext())) {
-            Log.v("MUSIC PLAYER", "Playback Error");
-            mp.reset();
+        switch (what) {
+            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+                Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
+                break;
+            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + extra);
+                break;
+            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+                Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + extra);
+                break;
         }
+        return false;
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        //start playback
-        if (checkPermission(getApplicationContext())) {
-            mp.start();
-            //notification
-            Intent notIntent = new Intent(this, MainActivity.class);
-            notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-                    notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Notification.Builder builder = new Notification.Builder(this);
-            builder.setContentIntent(pendInt)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .setTicker(songTitle)
-                    .setOngoing(true)
-                    .setContentTitle("Playing")
-                    .setContentText(songTitle);
-            Notification not = builder.build();
-            startForeground(NOTIFY_ID, not);
-        }
-    }
-
-    public static boolean checkPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    //playback methods
-    public int getPosn() {
-        return player.getCurrentPosition();
-    }
-
-    public int getDur() {
-        return player.getDuration();
-    }
-
-    public boolean isPng() {
-        return player.isPlaying();
-    }
-
-    public void pausePlayer() {
-        player.pause();
-    }
-
-    public void seek(int posn) {
-        player.seekTo(posn);
-    }
-
-    public void go() {
-        player.start();
-    }
-
-    //skip to previous track
-    public void playPrev() {
-        songPosn--;
-        if (songPosn < 0) songPosn = songs.size() - 1;
-        playSong();
-    }
-
-    //skip to next
-    public void playNext() {
-        if (shuffle) {
-            int newSong = songPosn;
-            while (newSong == songPosn) {
-                newSong = rand.nextInt(songs.size());
-            }
-            songPosn = newSong;
-        } else {
-            songPosn++;
-            if (songPosn >= songs.size()) songPosn = 0;
-        }
-        playSong();
+        playMedia();
     }
 
     @Override
-    public void onDestroy() {
-        stopForeground(true);
+    public void onSeekComplete(MediaPlayer mp) {
+        Log.d(TAG, "onSeekComplete: " + mp.getCurrentPosition());
+
     }
+
+    private boolean requestAudioFocus() {
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            //Focus gained
+            return true;
+        }
+        //Could not gain focus
+        return false;
+    }
+
+    private boolean removeAudioFocus() {
+        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
+                audioManager.abandonAudioFocus(this);
+    }
+
+    public void playSongAt(int index) {
+        if (mediaPlayer == null) {
+            initMediaPlayer();
+        }
+        mediaPlayer.stop();
+        Song song = songList.get(index);
+        mediaPath = song.data;
+        try {
+            mediaPlayer.setDataSource(mediaPath);
+        } catch (Exception e) {
+
+        }
+        mediaPlayer.start();
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
+        intent.putExtra("MusicState", IMusicState.PLAY);
+        sendBroadcast(intent);
+    }
+
+    public void setSongs(List<Song> songs) {
+        //TODO create with DB?
+        songList = songs;
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
+        intent.putExtra("MusicState", IMusicState.PLAY);
+        sendBroadcast(intent);
+    }
+
+    private void playMedia() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
+        intent.putExtra("MusicState", IMusicState.PLAY);
+        sendBroadcast(intent);
+    }
+
+    private void stopMedia() {
+        if (mediaPlayer == null) return;
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+    }
+
+    private void pauseMedia() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            resumePosition = mediaPlayer.getCurrentPosition();
+        }
+    }
+
+    private void resumeMedia() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.seekTo(resumePosition);
+            mediaPlayer.start();
+        }
+    }
+
 }

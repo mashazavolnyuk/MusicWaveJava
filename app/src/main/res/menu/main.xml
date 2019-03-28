@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_shuffle"
+        android:orderInCategory="1"
+        android:title="Shuffle"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_end"
+        android:orderInCategory="2"
+        android:title="End"
+        app:showAsAction="always" />
+
 </menu>
