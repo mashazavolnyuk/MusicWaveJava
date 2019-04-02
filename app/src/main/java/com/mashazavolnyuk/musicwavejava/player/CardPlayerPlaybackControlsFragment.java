@@ -1,6 +1,5 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.player;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +12,10 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
+import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

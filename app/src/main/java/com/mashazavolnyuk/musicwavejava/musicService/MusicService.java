@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.musicService;
 
 import android.app.Service;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
+import com.mashazavolnyuk.musicwavejava.IMusicState;
+import com.mashazavolnyuk.musicwavejava.MainActivity;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 
@@ -22,11 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MusicService extends Service
-        implements MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,
-        AudioManager.OnAudioFocusChangeListener {
+public class MusicService extends Service{
 
     private String TAG = "MusicService";
 
@@ -72,12 +70,7 @@ public class MusicService extends Service
     public static final int REPEAT_MODE_ALL = 1;
     public static final int REPEAT_MODE_THIS = 2;
 
-
-    private AudioManager audioManager;
-
-    private MediaPlayer mediaPlayer;
-    //path to the audio file
-    private String mediaPath;
+    private Playback playback;
 
     //MediaSession
     private MediaSessionManager mediaSessionManager;
@@ -101,7 +94,7 @@ public class MusicService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-
+        playback = new Player(this);
     }
 
     @Override
@@ -131,7 +124,6 @@ public class MusicService extends Service
             stopMedia();
         }
     }
-
 
     private void initMediaSession() {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
@@ -198,34 +190,6 @@ public class MusicService extends Service
         });
     }
 
-
-    private void initMediaPlayer() {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-        }
-        //Set up MediaPlayer event listeners
-        mediaPlayer.setOnCompletionListener(this);
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnBufferingUpdateListener(this);
-        mediaPlayer.setOnSeekCompleteListener(this);
-        mediaPlayer.setOnInfoListener(this);
-        //Reset so that the MediaPlayer is not pointing to another data source
-        mediaPlayer.reset();
-
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            // Set the data source to the mediaPath location
-            if (mediaPath != null) {
-                mediaPlayer.setDataSource(mediaPath);
-//                mediaPlayer.prepareAsync();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-        }
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -235,117 +199,13 @@ public class MusicService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) {
-            stopMedia();
-            mediaPlayer.release();
-        }
-        removeAudioFocus();
-    }
-
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        //Invoked when the audio focus of the system is updated.
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                // resume playback
-                if (mediaPlayer == null) initMediaPlayer();
-                else if (!mediaPlayer.isPlaying()) mediaPlayer.start();
-                mediaPlayer.setVolume(1.0f, 1.0f);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-                // Lost focus for an unbounded amount of time: stop playback and release media player
-                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
-                mediaPlayer.release();
-                mediaPlayer = null;
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                // Lost focus for a short time, but we have to stop
-                // playback. We don't release the media player because playback
-                // is likely to resume
-                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Lost focus for a short time, but it's ok to keep playing
-                // at an attenuated level
-                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
-                break;
-        }
-    }
-
-    @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        Log.d("me", "percent" + percent);
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        stopMedia();
-        //stop the service
-        stopSelf();
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        switch (what) {
-            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-                Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
-                break;
-            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + extra);
-                break;
-            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + extra);
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        return false;
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        playMedia();
-    }
-
-    @Override
-    public void onSeekComplete(MediaPlayer mp) {
-        Log.d(TAG, "onSeekComplete: " + mp.getCurrentPosition());
-
-    }
-
-    private boolean requestAudioFocus() {
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            //Focus gained
-            return true;
-        }
-        //Could not gain focus
-        return false;
-    }
-
-    private boolean removeAudioFocus() {
-        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
-                audioManager.abandonAudioFocus(this);
     }
 
     public void playSongAt(int index) {
-        if (mediaPlayer == null) {
-            initMediaPlayer();
-        }
-        mediaPlayer.stop();
         Song song = songList.get(index);
-        mediaPath = song.data;
-        try {
-            mediaPlayer.setDataSource(mediaPath);
-            mediaPlayer.prepareAsync();
-        } catch (Exception e) {
+        playback.setDataPath(song.data);
+        playback.play();
 
-        }
-        mediaPlayer.start();
         Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
         intent.putExtra("MusicState", IMusicState.PLAY);
         sendBroadcast(intent);
@@ -360,33 +220,30 @@ public class MusicService extends Service
     }
 
     private void playMedia() {
-        if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
+        playback.play();
         Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
         intent.putExtra("MusicState", IMusicState.PLAY);
         sendBroadcast(intent);
     }
 
     private void stopMedia() {
-        if (mediaPlayer == null) return;
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
+        playback.stop();
     }
 
     private void pauseMedia() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            resumePosition = mediaPlayer.getCurrentPosition();
-        }
+        playback.pause();
     }
 
     private void resumeMedia() {
-        if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.seekTo(resumePosition);
-            mediaPlayer.start();
-        }
+
+    }
+
+    public int getSongProgressMillis() {
+        return playback.position();
+    }
+
+    public int getSongDurationMillis() {
+        return playback.duration();
     }
 
 }

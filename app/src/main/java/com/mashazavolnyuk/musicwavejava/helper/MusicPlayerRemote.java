@@ -19,7 +19,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mashazavolnyuk.musicwavejava.MusicService;
+import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 

@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.player;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
+import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
-public class MiniPlayerFragment extends MusicServiceFragment  {
+public class MiniPlayerFragment extends MusicServiceFragment {
 
     private Unbinder unbinder;
 

@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.mashazavolnyuk.musicwavejava.WidthFitSquareLayout
+                <com.mashazavolnyuk.musicwavejava.customView.WidthFitSquareLayout
                     android:id="@+id/album_cover_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -31,11 +31,11 @@
                         <!--android:layout_width="match_parent"-->
                         <!--android:layout_height="wrap_content" />-->
 
-                </com.mashazavolnyuk.musicwavejava.WidthFitSquareLayout>>
+                </com.mashazavolnyuk.musicwavejava.customView.WidthFitSquareLayout>>
 
                 <fragment
                     android:id="@+id/playback_controls_fragment"
-                    class="com.mashazavolnyuk.musicwavejava.CardPlayerPlaybackControlsFragment"
+                    class="com.mashazavolnyuk.musicwavejava.player.CardPlayerPlaybackControlsFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/album_cover_container" />

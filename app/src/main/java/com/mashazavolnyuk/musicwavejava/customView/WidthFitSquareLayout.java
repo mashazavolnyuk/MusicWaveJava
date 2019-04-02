@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.customView;
 
 import android.annotation.TargetApi;
 import android.content.Context;

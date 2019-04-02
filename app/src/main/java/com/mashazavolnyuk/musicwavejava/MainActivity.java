@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mashazavolnyuk.musicwavejava.data.Song;
+import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 import com.mashazavolnyuk.musicwavejava.songList.IMusicProviderControl;
 import com.mashazavolnyuk.musicwavejava.songList.SongsListFragment;
 

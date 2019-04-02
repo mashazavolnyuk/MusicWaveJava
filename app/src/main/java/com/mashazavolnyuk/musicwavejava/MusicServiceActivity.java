@@ -12,7 +12,9 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.mashazavolnyuk.musicwavejava.base.BaseActivity;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

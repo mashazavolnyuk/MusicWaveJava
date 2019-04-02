@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.base;
 
 import android.Manifest;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+
+import com.mashazavolnyuk.musicwavejava.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST = 100;
