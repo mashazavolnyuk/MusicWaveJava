@@ -14,7 +14,8 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
-import com.mashazavolnyuk.musicwavejava.model.Song;
+import com.mashazavolnyuk.musicwavejava.data.Song;
+import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,6 +106,9 @@ public class MusicService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(songList.size()==0){
+            songList = SongLoader.getSongList(this);
+        }
         return START_NOT_STICKY;
     }
 
@@ -214,7 +218,7 @@ public class MusicService extends Service
             // Set the data source to the mediaPath location
             if (mediaPath != null) {
                 mediaPlayer.setDataSource(mediaPath);
-                mediaPlayer.prepareAsync();
+//                mediaPlayer.prepareAsync();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -337,6 +341,7 @@ public class MusicService extends Service
         mediaPath = song.data;
         try {
             mediaPlayer.setDataSource(mediaPath);
+            mediaPlayer.prepareAsync();
         } catch (Exception e) {
 
         }

@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
-import com.mashazavolnyuk.musicwavejava.model.Song;
+import com.mashazavolnyuk.musicwavejava.data.Song;
 
 import java.util.ArrayList;
 

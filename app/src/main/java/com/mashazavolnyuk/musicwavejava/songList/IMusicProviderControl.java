@@ -1,6 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.songList;
 
-import com.mashazavolnyuk.musicwavejava.model.Song;
+import com.mashazavolnyuk.musicwavejava.data.Song;
 
 public interface IMusicProviderControl {
 

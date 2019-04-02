@@ -1,20 +1,25 @@
-package com.mashazavolnyuk.musicwavejava.model;
+package com.mashazavolnyuk.musicwavejava.data;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity
 public class Song {
 
     public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, "", -1, "");
 
+    @PrimaryKey(autoGenerate = true)
     public final int id;
-    private final String title;
-    private final int trackNumber;
-    private final int year;
-    private final long duration;
+    public final String title;
+    public final int trackNumber;
+    public final int year;
+    public final long duration;
     public final String data;
-    private final long dateModified;
-    private final int albumId;
-    private final String albumName;
-    private final int artistId;
-    private final String artistName;
+    public final long dateModified;
+    public final int albumId;
+    public final String albumName;
+    public final int artistId;
+    public final String artistName;
 
 
     public Song(int id, String title, int trackNumber, int year, long duration, String data, long dateModified, int albumId, String albumName, int artistId, String artistName) {

@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.mashazavolnyuk.musicwavejava.MusicService;
 import com.mashazavolnyuk.musicwavejava.R;
-import com.mashazavolnyuk.musicwavejava.model.Song;
+import com.mashazavolnyuk.musicwavejava.data.Song;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,8 +46,12 @@ public class MusicPlayerRemote {
         }
 
         final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
-        contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //todo consider other approach to start service
+            contextWrapper.startForegroundService(new Intent(contextWrapper, MusicService.class));
+        } else {
+            contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
+        }
         final ServiceBinder binder = new ServiceBinder(callback);
 
         if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, Context.BIND_AUTO_CREATE)) {
@@ -108,7 +112,7 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void playSongAt(final int position) {
+    public static void playSongAt(int position) {
         if (musicService != null) {
             musicService.playSongAt(position);
         }

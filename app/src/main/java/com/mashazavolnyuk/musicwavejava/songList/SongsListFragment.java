@@ -16,7 +16,7 @@ import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.adpater.CustomTouchListener;
 import com.mashazavolnyuk.musicwavejava.adpater.SongsAdapter;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
-import com.mashazavolnyuk.musicwavejava.model.Song;
+import com.mashazavolnyuk.musicwavejava.data.Song;
 
 
 import java.util.ArrayList;
@@ -45,8 +45,6 @@ public class SongsListFragment extends AbsPlayerFragment {
                 getApplication()).observe(this, songs -> {
                     if (songs != null) {
                         Collections.sort(songs, (a, b) -> a.getTitle().compareTo(b.getTitle()));
-                        songList = songs;
-                        MusicPlayerRemote.setSongs(songs);
                         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(getActivity()));
                         recyclerViewSongs.setAdapter(new SongsAdapter(songs));
                         recyclerViewSongs.addOnItemTouchListener(new CustomTouchListener(SongsListFragment.this.getActivity(),
