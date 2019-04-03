@@ -21,6 +21,7 @@ import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -101,6 +102,7 @@ public class MusicService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(songList.size()==0){
             songList = SongLoader.getSongList(this);
+            Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
         }
         return START_NOT_STICKY;
     }

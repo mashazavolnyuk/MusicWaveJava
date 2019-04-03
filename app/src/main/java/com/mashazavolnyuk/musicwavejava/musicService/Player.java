@@ -1,6 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.musicService;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 
@@ -42,11 +43,11 @@ public class Player implements Playback {
     public void setDataPath(@NonNull String dataPath) {
         if(isPlaying()){
             mediaPlayer.stop();
-            mediaPlayer.release();
+            mediaPlayer.reset();
         }
         try {
             mediaPlayer.setDataSource(dataPath);
-            mediaPlayer.prepareAsync();
+            mediaPlayer.prepare();
             isInitialized = true;
         } catch (IOException e) {
             e.printStackTrace();
