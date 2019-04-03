@@ -15,13 +15,15 @@ import android.widget.TextView;
 import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
 import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
+import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment {
+public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment implements MusicProgressViewUpdateHelper.Callback  {
 
     private Unbinder unbinder;
 
@@ -48,12 +50,12 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment {
     private int lastPlaybackControlsColor;
     private int lastDisabledPlaybackControlsColor;
 
-//    private MusicProgressViewUpdateHelper progressViewUpdateHelper;
+    private MusicProgressViewUpdateHelper progressViewUpdateHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        progressViewUpdateHelper = new MusicProgressViewUpdateHelper(this);
+        progressViewUpdateHelper = new MusicProgressViewUpdateHelper(this);
     }
 
     @Override
@@ -78,13 +80,13 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment {
     @Override
     public void onResume() {
         super.onResume();
-       // progressViewUpdateHelper.start();
+        progressViewUpdateHelper.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-       // progressViewUpdateHelper.stop();
+        progressViewUpdateHelper.stop();
     }
 
     @Override
@@ -232,23 +234,32 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment {
 //        progressSlider.getThumb().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 //        progressSlider.getProgressDrawable().mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
 //
-//        progressSlider.setOnSeekBarChangeListener(new SimpleOnSeekbarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                if (fromUser) {
-//                    MusicPlayerRemote.seekTo(progress);
-//                    onUpdateProgressViews(MusicPlayerRemote.getSongProgressMillis(), MusicPlayerRemote.getSongDurationMillis());
-//                }
-//            }
-//        });
+        progressSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener () {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    MusicPlayerRemote.seekTo(progress);
+                    onUpdateProgressViews(MusicPlayerRemote.getSongProgressMillis(), MusicPlayerRemote.getSongDurationMillis());
+                }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
-//    @Override
-//    public void onUpdateProgressViews(int progress, int total) {
-////        progressSlider.setMax(total);
-////        progressSlider.setProgress(progress);
-////        songTotalTime.setText(MusicUtil.getReadableDurationString(total));
-////        songCurrentProgress.setText(MusicUtil.getReadableDurationString(progress));
-//    }
+    @Override
+    public void onUpdateProgressViews(int progress, int total) {
+        progressSlider.setMax(total);
+        progressSlider.setProgress(progress);
+        songTotalTime.setText(MusicUtil.getReadableDurationString(total));
+        songCurrentProgress.setText(MusicUtil.getReadableDurationString(progress));
+    }
 
 }

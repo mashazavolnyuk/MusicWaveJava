@@ -58,6 +58,8 @@
         android:layout_height="3dp"
         android:layout_gravity="bottom"
         app:mpb_progressStyle="horizontal"
+        android:indeterminateTint="@color/colorAccent"
+        android:indeterminateTintMode="src_in"
         app:mpb_useIntrinsicPadding="false" />
 
 </FrameLayout>

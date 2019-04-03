@@ -239,14 +239,14 @@ public class MusicPlayerRemote {
 
     public static int getSongProgressMillis() {
         if (musicService != null) {
-            //return musicService.getSongProgressMillis();
+            return musicService.getSongProgressMillis();
         }
         return -1;
     }
 
     public static int getSongDurationMillis() {
         if (musicService != null) {
-            //return musicService.getSongDurationMillis();
+            return musicService.getSongDurationMillis();
         }
         return -1;
     }
@@ -260,7 +260,7 @@ public class MusicPlayerRemote {
 
     public static int seekTo(int millis) {
         if (musicService != null) {
-            //return musicService.seek(millis);
+            return musicService.seek(millis);
         }
         return -1;
     }

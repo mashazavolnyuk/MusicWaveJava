@@ -12,12 +12,14 @@ import android.widget.TextView;
 import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
-public class MiniPlayerFragment extends MusicServiceFragment {
+public class MiniPlayerFragment extends MusicServiceFragment implements MusicProgressViewUpdateHelper.Callback  {
 
     private Unbinder unbinder;
 
@@ -28,10 +30,36 @@ public class MiniPlayerFragment extends MusicServiceFragment {
     @BindView(R.id.progress_bar)
     MaterialProgressBar progressBar;
 
+    private MusicProgressViewUpdateHelper progressViewUpdateHelper;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        progressViewUpdateHelper = new MusicProgressViewUpdateHelper(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_mini_player, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder = ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        progressViewUpdateHelper.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressViewUpdateHelper.stop();
     }
 
     @Override
@@ -44,4 +72,11 @@ public class MiniPlayerFragment extends MusicServiceFragment {
     }
 
 
+    @Override
+    public void onUpdateProgressViews(int progress, int total) {
+        if(progressBar!=null){
+            progressBar.setMax(total);
+            progressBar.setProgress(progress);
+        }
+    }
 }

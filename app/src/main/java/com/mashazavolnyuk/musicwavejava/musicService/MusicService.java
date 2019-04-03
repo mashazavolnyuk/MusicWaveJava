@@ -236,6 +236,18 @@ public class MusicService extends Service{
         playback.pause();
     }
 
+
+    public int seek(int millis) {
+        synchronized (this) {
+            try {
+                int newPosition = playback.seek(millis);
+                return newPosition;
+            } catch (Exception e) {
+                return -1;
+            }
+        }
+    }
+
     private void resumeMedia() {
 
     }
