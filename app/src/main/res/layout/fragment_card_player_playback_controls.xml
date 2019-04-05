@@ -9,8 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="30dp">
 
         <TextView
             android:id="@+id/player_song_current_progress"
@@ -43,7 +42,8 @@
         <SeekBar
             android:layout_width="match_parent"
             android:id="@+id/player_progress_slider"
-            android:layout_height="10dp"
+            android:layout_height="match_parent"
+            android:thumb="@drawable/slider_thumb"
             android:layout_toLeftOf="@id/player_song_total_time"
             android:layout_toRightOf="@id/player_song_current_progress"
             tools:ignore="RtlHardcoded,UnusedAttribute" />
@@ -53,8 +53,8 @@
     <RelativeLayout
         android:id="@+id/player_media_controller_container"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layoutDirection="ltr"
+        android:layout_height="wrap_content"
+       android:layout_marginTop="20dp"
         tools:ignore="ContentDescription,UnusedAttribute">
 
         <ImageButton
@@ -116,8 +116,8 @@
             android:layout_centerInParent="true" />
 
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/player_play_pause_fab"
             android:layout_centerInParent="true"
             app:elevation="4dp"

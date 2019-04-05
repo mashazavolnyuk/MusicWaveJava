@@ -3,8 +3,6 @@ package com.mashazavolnyuk.musicwavejava.musicService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -12,20 +10,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
-
 import com.mashazavolnyuk.musicwavejava.IMusicState;
 import com.mashazavolnyuk.musicwavejava.MainActivity;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MusicService extends Service{
+public class MusicService extends Service implements Playback.PlaybackCallbacks{
 
     private String TAG = "MusicService";
 
@@ -82,8 +76,18 @@ public class MusicService extends Service{
     private int resumePosition;
 
     private List<Song> songList = new ArrayList<>();
+    private int position;
+    private Song currentSong;
     private final IBinder musicBind = new MusicBinder();
 
+    @Override
+    public void onTrackEnded() {
+        position ++;
+        currentSong = songList.get(position);
+        playback.setDataPath(currentSong.data);
+        playback.play();
+        sendBroadcast(new Intent(MusicService.META_CHANGED));
+    }
 
     public class MusicBinder extends Binder {
         @NonNull
@@ -96,6 +100,7 @@ public class MusicService extends Service{
     public void onCreate() {
         super.onCreate();
         playback = new Player(this);
+        playback.setCallbacks(this);
     }
 
     @Override
@@ -204,8 +209,11 @@ public class MusicService extends Service{
     }
 
     public void playSongAt(int index) {
+
         Song song = songList.get(index);
         playback.setDataPath(song.data);
+        currentSong = song;
+        position = index;
         playback.play();
 
         Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
@@ -236,7 +244,6 @@ public class MusicService extends Service{
         playback.pause();
     }
 
-
     public int seek(int millis) {
         synchronized (this) {
             try {
@@ -258,6 +265,10 @@ public class MusicService extends Service{
 
     public int getSongDurationMillis() {
         return playback.duration();
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
     }
 
 }

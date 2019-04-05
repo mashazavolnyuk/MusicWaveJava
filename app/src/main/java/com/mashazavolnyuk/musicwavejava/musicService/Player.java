@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
-public class Player implements Playback {
+public class Player implements Playback, MediaPlayer.OnCompletionListener {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
@@ -15,9 +15,12 @@ public class Player implements Playback {
 
     private boolean isInitialized;
 
+    private Playback.PlaybackCallbacks callbacks;
+
     public Player(Context context) {
         this.context = context;
         isInitialized = true;
+        mediaPlayer.setOnCompletionListener(this);
     }
 
 
@@ -41,11 +44,12 @@ public class Player implements Playback {
 
     @Override
     public void setDataPath(@NonNull String dataPath) {
-        if(isPlaying()){
+        if (isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(dataPath);
             mediaPlayer.prepare();
             isInitialized = true;
@@ -78,6 +82,17 @@ public class Player implements Playback {
     public int seek(int whereto) {
         mediaPlayer.seekTo(whereto);
         return whereto;
+    }
+
+    public void setCallbacks(Playback.PlaybackCallbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (callbacks != null) {
+            callbacks.onTrackEnded();
+        }
     }
 }
 

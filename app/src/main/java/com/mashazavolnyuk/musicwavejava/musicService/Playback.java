@@ -22,4 +22,10 @@ public interface Playback {
 
     int seek(int whereto);
 
+    void setCallbacks(PlaybackCallbacks  callbacks);
+
+    interface PlaybackCallbacks {
+
+        void onTrackEnded();
+    }
 }

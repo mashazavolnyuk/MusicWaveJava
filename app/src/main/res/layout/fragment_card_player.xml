@@ -1,74 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-        <FrameLayout
+<ImageView
+    android:id="@+id/cover"
+    android:layout_centerHorizontal="true"
+    android:src="@drawable/ic_music"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/songInfo"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/cover"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/artistName"
+        android:text="text"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/songTitle"
+            android:text="text"
+            android:textSize="20sp"
+            android:textAlignment="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-            <View
-                android:id="@+id/color_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary" />
-
-            <RelativeLayout
-                android:id="@+id/player_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.mashazavolnyuk.musicwavejava.customView.WidthFitSquareLayout
-                    android:id="@+id/album_cover_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true">
-
-                    <!--<fragment-->
-                        <!--android:id="@+id/player_album_cover_fragment"-->
-                        <!--class="com.kabouzeid.gramophone.ui.fragments.player.PlayerAlbumCoverFragment"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content" />-->
-
-                </com.mashazavolnyuk.musicwavejava.customView.WidthFitSquareLayout>>
-
-                <fragment
-                    android:id="@+id/playback_controls_fragment"
-                    class="com.mashazavolnyuk.musicwavejava.player.CardPlayerPlaybackControlsFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/album_cover_container" />
-
-            </RelativeLayout>
-
-            <FrameLayout
-                android:id="@+id/toolbar_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <!--<include layout="@layout/shadow_statusbar_toolbar" />-->
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!--<com.kabouzeid.gramophone.views.StatusBarView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="@dimen/status_bar_padding" />-->
-
-                    <android.support.v7.widget.Toolbar
-                        android:id="@+id/player_toolbar"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:background="@android:color/transparent" />
-
-                </LinearLayout>
+    <fragment
+        android:id="@+id/playback_controls_fragment"
+        class="com.mashazavolnyuk.musicwavejava.player.CardPlayerPlaybackControlsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songInfo" />
+</RelativeLayout>
 
 
-            </FrameLayout>
-
-        </FrameLayout>
-
-</FrameLayout>

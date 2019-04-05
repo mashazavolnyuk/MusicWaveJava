@@ -1,23 +1,16 @@
 package com.mashazavolnyuk.musicwavejava.player;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import android.support.v7.widget.LinearLayoutManager;
-
-import android.support.v7.widget.Toolbar;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
-import android.widget.FrameLayout;
-
+import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.data.Song;
+import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,17 +20,13 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
     private Unbinder unbinder;
 
-    @Nullable
-    @BindView(R.id.toolbar_container)
-    FrameLayout toolbarContainer;
-    @BindView(R.id.player_toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.color_background)
-    View colorBackground;
+    @BindView(R.id.artistName)
+    TextView artistNameText;
+
+    @BindView(R.id.songTitle)
+    TextView songTitleText;
 
     private CardPlayerPlaybackControlsFragment playbackControlsFragment;
-    private LinearLayoutManager layoutManager;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +43,6 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
     @Override
     public void onDestroyView() {
-        layoutManager = null;
         super.onDestroyView();
         unbinder.unbind();
     }
@@ -80,10 +68,10 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
     }
 
-
-    @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
-        //MusicPlayerRemote.getCurrentSong();
+        Song song = MusicPlayerRemote.getCurrentSong();
+        artistNameText.setText(song.getArtistName());
+        songTitleText.setText(song.getTitle());
     }
 
     private void setUpSubFragments() {
