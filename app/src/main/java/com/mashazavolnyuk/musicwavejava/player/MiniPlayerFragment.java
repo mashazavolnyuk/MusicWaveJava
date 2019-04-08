@@ -1,8 +1,10 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
+import com.mashazavolnyuk.musicwavejava.helper.PlayPauseButtonOnClickHandler;
+import com.mashazavolnyuk.musicwavejava.view.PlayPauseDrawable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,11 +30,13 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
     @BindView(R.id.mini_player_title)
     TextView miniPlayerTitle;
     @BindView(R.id.mini_player_play_pause_button)
-    ImageView miniPlayerPlayPauseButton;
+    AppCompatImageView miniPlayerPlayPauseButton;
     @BindView(R.id.progress_bar)
     MaterialProgressBar progressBar;
 
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
+
+    private PlayPauseDrawable playPauseDrawable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
+        setUpPlayPauseButton();
     }
 
     @Override
@@ -63,8 +70,32 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onServiceConnected() {
+        updateSongTitle();
+        updatePlayPauseDrawableState(false);
+    }
+
+    @Override
     public void onPlayingMetaChanged() {
         updateSongTitle();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        updatePlayPauseDrawableState(true);
+    }
+
+
+    private void setUpPlayPauseButton() {
+        playPauseDrawable = new PlayPauseDrawable(getActivity());
+        miniPlayerPlayPauseButton.setImageDrawable(playPauseDrawable);
+        miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
     }
 
     private void updateSongTitle() {
@@ -77,6 +108,14 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
         if(progressBar!=null){
             progressBar.setMax(total);
             progressBar.setProgress(progress);
+        }
+    }
+
+    protected void updatePlayPauseDrawableState(boolean animate) {
+        if (MusicPlayerRemote.isPlaying()) {
+            playPauseDrawable.setPause(animate);
+        } else {
+            playPauseDrawable.setPlay(animate);
         }
     }
 }

@@ -16,4 +16,6 @@
     <string name="albums">Albums</string>
     <string name="favorites">Favorites</string>
     <string name="about">About</string>
+
+    <string name="unknown">Unknown</string>
 </resources>

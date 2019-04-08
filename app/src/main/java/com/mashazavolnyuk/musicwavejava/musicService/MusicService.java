@@ -23,7 +23,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
 
     private String TAG = "MusicService";
 
-    public static final String MUSIC_WAVE_PACKAGE_NAME = "com.kabouzeid.gramophone";
+    public static final String MUSIC_WAVE_PACKAGE_NAME = "com.mashazavolnyuk.musicwavejava";
 
     public static final String ACTION_PLAY = "com.mashazavolnyuk.musicwavejava.ACTION_PLAY";
     public static final String ACTION_RESUME = "com.mashazavolnyuk.musicwavejava.ACTION_RESUME";
@@ -86,7 +86,15 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
         currentSong = songList.get(position);
         playback.setDataPath(currentSong.data);
         playback.play();
-        sendBroadcast(new Intent(MusicService.META_CHANGED));
+        notifyChange(MusicService.META_CHANGED);
+    }
+
+    public void play() {
+        playback.play();
+    }
+
+    public boolean isPlaying() {
+        return playback != null && playback.isPlaying();
     }
 
     public class MusicBinder extends Binder {
@@ -110,6 +118,10 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
             Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
         }
         return START_NOT_STICKY;
+    }
+
+    private void notifyChange(@NonNull final String what) {
+        sendBroadcast(new Intent(what));
     }
 
     private void handleIncomingActions(Intent playbackAction) {
@@ -224,24 +236,22 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     public void setSongs(List<Song> songs) {
         //TODO create with DB?
         songList = songs;
-        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
-        intent.putExtra("MusicState", IMusicState.PLAY);
-        sendBroadcast(intent);
     }
 
     private void playMedia() {
         playback.play();
-        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
-        intent.putExtra("MusicState", IMusicState.PLAY);
-        sendBroadcast(intent);
+        notifyChange(PLAY_STATE_CHANGED);
     }
 
     private void stopMedia() {
         playback.stop();
     }
 
-    private void pauseMedia() {
-        playback.pause();
+    public void pauseMedia() {
+        if (playback.isPlaying()) {
+            playback.pause();
+            notifyChange(PLAY_STATE_CHANGED);
+        }
     }
 
     public int seek(int millis) {

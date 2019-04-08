@@ -1,5 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,8 +17,10 @@ import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
+import com.mashazavolnyuk.musicwavejava.helper.PlayPauseButtonOnClickHandler;
 import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
+import com.mashazavolnyuk.musicwavejava.view.PlayPauseDrawable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +48,7 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     @BindView(R.id.player_song_current_progress)
     TextView songCurrentProgress;
 
-//    private PlayPauseDrawable playerFabPlayPauseDrawable;
+    private PlayPauseDrawable playerFabPlayPauseDrawable;
 
     private int lastPlaybackControlsColor;
     private int lastDisabledPlaybackControlsColor;
@@ -127,28 +130,28 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     }
 
     private void setUpPlayPauseFab() {
-//        final int fabColor = Color.WHITE;
+        final int fabColor = Color.WHITE;
 //        TintHelper.setTintAuto(playPauseFab, fabColor, true);
-//
-//        playerFabPlayPauseDrawable = new PlayPauseDrawable(getActivity());
-//
-//        playPauseFab.setImageDrawable(playerFabPlayPauseDrawable); // Note: set the drawable AFTER TintHelper.setTintAuto() was called
+
+        playerFabPlayPauseDrawable = new PlayPauseDrawable(getActivity());
+
+        playPauseFab.setImageDrawable(playerFabPlayPauseDrawable); // Note: set the drawable AFTER TintHelper.setTintAuto() was called
 //        playPauseFab.setColorFilter(MaterialValueHelper.getPrimaryTextColor(getContext(), ColorUtil.isColorLight(fabColor)), PorterDuff.Mode.SRC_IN);
-//        playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
-//        playPauseFab.post(() -> {
-//            if (playPauseFab != null) {
-//                playPauseFab.setPivotX(playPauseFab.getWidth() / 2);
-//                playPauseFab.setPivotY(playPauseFab.getHeight() / 2);
-//            }
-//        });
+        playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
+        playPauseFab.post(() -> {
+            if (playPauseFab != null) {
+                playPauseFab.setPivotX(playPauseFab.getWidth() / 2);
+                playPauseFab.setPivotY(playPauseFab.getHeight() / 2);
+            }
+        });
     }
 
     protected void updatePlayPauseDrawableState(boolean animate) {
-//        if (MusicPlayerRemote.isPlaying()) {
-//            playerFabPlayPauseDrawable.setPause(animate);
-//        } else {
-//            playerFabPlayPauseDrawable.setPlay(animate);
-//        }
+        if (MusicPlayerRemote.isPlaying()) {
+            playerFabPlayPauseDrawable.setPause(animate);
+        } else {
+            playerFabPlayPauseDrawable.setPlay(animate);
+        }
     }
 
     private void setUpMusicControllers() {

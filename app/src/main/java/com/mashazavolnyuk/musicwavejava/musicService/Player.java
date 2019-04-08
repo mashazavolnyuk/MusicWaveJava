@@ -1,7 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.musicService;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 
@@ -17,9 +16,10 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
 
     private Playback.PlaybackCallbacks callbacks;
 
+    private String dataPath;
+
     public Player(Context context) {
         this.context = context;
-        isInitialized = true;
         mediaPlayer.setOnCompletionListener(this);
     }
 
@@ -33,12 +33,11 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
     @Override
     public void stop() {
         mediaPlayer.reset();
-        isInitialized = false;
     }
 
     @Override
     public boolean pause() {
-        mediaPlayer.start();
+        mediaPlayer.pause();
         return true;
     }
 
@@ -51,8 +50,8 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
         try {
             mediaPlayer.reset();
             mediaPlayer.setDataSource(dataPath);
+            this.dataPath = dataPath;
             mediaPlayer.prepare();
-            isInitialized = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean isPlaying() {
-        return isInitialized && mediaPlayer.isPlaying();
+        return mediaPlayer.isPlaying();
     }
 
     @Override
@@ -90,7 +89,7 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (callbacks != null) {
+        if (dataPath!= null && callbacks != null) {
             callbacks.onTrackEnded();
         }
     }
