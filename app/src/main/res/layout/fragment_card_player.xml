@@ -8,7 +8,6 @@
 <ImageView
     android:id="@+id/cover"
     android:layout_centerHorizontal="true"
-    android:src="@drawable/ic_music"
     android:layout_width="300dp"
     android:layout_height="300dp"
     android:layout_marginBottom="10dp"/>

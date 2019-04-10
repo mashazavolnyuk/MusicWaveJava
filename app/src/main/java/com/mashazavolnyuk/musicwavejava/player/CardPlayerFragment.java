@@ -1,16 +1,24 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +33,9 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
     @BindView(R.id.songTitle)
     TextView songTitleText;
+
+    @BindView(R.id.cover)
+    ImageView coverView;
 
     private CardPlayerPlaybackControlsFragment playbackControlsFragment;
 
@@ -70,8 +81,31 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
     private void updateCurrentSong() {
         Song song = MusicPlayerRemote.getCurrentSong();
+        if(song==null) return;
         artistNameText.setText(song.getArtistName());
         songTitleText.setText(song.getTitle());
+        Uri uri = MusicUtil.getMediaStoreAlbumCoverUri(song.albumId);
+        Picasso.get()
+                .load(uri)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded (final Bitmap bitmap, Picasso.LoadedFrom from){
+                        /* Save the bitmap or do something with it here */
+
+                        //Set it in the ImageView
+                        coverView.setImageBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
     }
 
     private void setUpSubFragments() {

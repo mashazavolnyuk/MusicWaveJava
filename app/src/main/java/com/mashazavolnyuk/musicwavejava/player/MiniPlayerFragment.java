@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
 import com.mashazavolnyuk.musicwavejava.helper.PlayPauseButtonOnClickHandler;
@@ -99,7 +100,10 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
     }
 
     private void updateSongTitle() {
-        miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().getTitle());
+        Song song = MusicPlayerRemote.getCurrentSong();
+        if(song!=null){
+            miniPlayerTitle.setText(song.getTitle());
+        }
     }
 
 

@@ -217,7 +217,7 @@ public class MusicPlayerRemote {
 
     public static Song getCurrentSong() {
         if (musicService != null) {
-           // return musicService.getCurrentSong();
+            return musicService.getCurrentSong();
         }
         return Song.EMPTY_SONG;
     }

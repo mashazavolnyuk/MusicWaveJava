@@ -1,5 +1,8 @@
 package com.mashazavolnyuk.musicwavejava.util;
 
+import android.content.ContentUris;
+import android.net.Uri;
+
 import java.util.Locale;
 
 public class MusicUtil {
@@ -14,6 +17,12 @@ public class MusicUtil {
             minutes = minutes % 60;
             return String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds);
         }
+    }
+
+    public static Uri getMediaStoreAlbumCoverUri(int albumId) {
+        final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+
+        return ContentUris.withAppendedId(sArtworkUri, albumId);
     }
 
 }
