@@ -1,5 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -95,6 +96,7 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
 
     private void setUpPlayPauseButton() {
         playPauseDrawable = new PlayPauseDrawable(getActivity());
+        playPauseDrawable.setColor(Color.GRAY);
         miniPlayerPlayPauseButton.setImageDrawable(playPauseDrawable);
         miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
     }

@@ -1,6 +1,5 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
@@ -48,10 +47,6 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     TextView songCurrentProgress;
 
     private PlayPauseDrawable playerFabPlayPauseDrawable;
-
-    private int lastPlaybackControlsColor;
-    private int lastDisabledPlaybackControlsColor;
-
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
 
     @Override
@@ -66,7 +61,7 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
         setUpMusicControllers();
@@ -144,15 +139,8 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     }
 
     private void setUpPrevNext() {
-        updatePrevNextColor();
         nextButton.setOnClickListener(v -> MusicPlayerRemote.playNextSong());
         prevButton.setOnClickListener(v -> MusicPlayerRemote.playPreviousSong());
-    }
-
-
-
-    private void updatePrevNextColor() {
-        prevButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
     }
 
     private void setUpShuffleButton() {

@@ -56,10 +56,14 @@ public class PlayPauseDrawable extends Drawable {
         final Resources res = context.getResources();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GRAY);
+        paint.setColor(Color.WHITE);
         pauseBarWidth = res.getDimensionPixelSize(R.dimen.pause_bar_width);
         pauseBarHeight = res.getDimensionPixelSize(R.dimen.pause_bar_height);
         pauseBarDistance = res.getDimensionPixelSize(R.dimen.pause_bar_distance);
+    }
+
+    public void setColor(int color){
+        paint.setColor(color);
     }
 
     @Override

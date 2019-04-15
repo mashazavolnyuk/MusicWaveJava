@@ -90,34 +90,10 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     private Song currentSong;
     private final IBinder musicBind = new MusicBinder();
 
+    @Nullable
     @Override
-    public void onTrackEnded() {
-        playNextSong(true);
-    }
-
-    public void play() {
-        playback.play();
-    }
-
-    public boolean isPlaying() {
-        return playback != null && playback.isPlaying();
-    }
-
-    public void playNextSong(boolean b) {
-        position ++;
-        currentSong = songList.get(position);
-        playback.setDataPath(currentSong.data);
-        playback.play();
-        notifyChange(MusicService.META_CHANGED);
-
-    }
-
-    public void playPreviousSong(boolean b) {
-        position --;
-        currentSong = songList.get(position);
-        playback.setDataPath(currentSong.data);
-        playback.play();
-        notifyChange(MusicService.META_CHANGED);
+    public IBinder onBind(Intent intent) {
+        return musicBind;
     }
 
     public class MusicBinder extends Binder {
@@ -246,32 +222,50 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
         });
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return musicBind;
+    public void onTrackEnded() {
+        playNextSong(true);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void play() {
+        playback.play();
+        notifyChange(PLAY_STATE_CHANGED);
+    }
+
+    public boolean isPlaying() {
+        return playback != null && playback.isPlaying();
+    }
+
+    public void playNextSong(boolean b) {
+        position ++;
+        currentSong = songList.get(position);
+        playback.setDataPath(currentSong.data);
+        playback.play();
+        notifyChange(MusicService.META_CHANGED);
+        notifyChange(MusicService.PLAY_STATE_CHANGED);
+    }
+
+    public void playPreviousSong(boolean b) {
+        position --;
+        currentSong = songList.get(position);
+        playback.setDataPath(currentSong.data);
+        playback.play();
+        notifyChange(MusicService.META_CHANGED);
+        notifyChange(MusicService.PLAY_STATE_CHANGED);
     }
 
     public void playSongAt(int index) {
-
         Song song = songList.get(index);
         playback.setDataPath(song.data);
         currentSong = song;
         position = index;
         playback.play();
-
         Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
         intent.putExtra("MusicState", IMusicState.PLAY);
         sendBroadcast(intent);
     }
 
     public void setSongs(List<Song> songs) {
-        //TODO create with DB?
         songList = songs;
     }
 
