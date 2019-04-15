@@ -64,18 +64,18 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="-8dp"
             android:layout_toStartOf="@+id/dummy_fab"
-            android:src="@drawable/ic_play"
+            android:src="@drawable/ic_rewind"
             android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
-        <android.support.v7.widget.AppCompatButton
+        <ImageButton
             android:id="@+id/player_next_button"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="-8dp"
             android:layout_toEndOf="@+id/dummy_fab"
-            android:src="@drawable/ic_play"
+            android:src="@drawable/ic_forward"
             android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
@@ -87,7 +87,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:padding="22dp"
-            android:drawableTop="@drawable/ic_play"
+            android:drawableTop="@drawable/ic_repeat"
             android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
@@ -100,7 +100,7 @@
             android:layout_marginEnd="16dp"
             android:padding="22dp"
             android:background="@drawable/ic_ripple"
-            android:drawableTop="@drawable/ic_play"
+            android:drawableTop="@drawable/ic_shuffle"
             tools:ignore="MissingPrefix" />
 
         <Space

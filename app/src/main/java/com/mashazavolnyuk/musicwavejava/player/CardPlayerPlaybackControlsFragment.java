@@ -34,7 +34,7 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     @BindView(R.id.player_prev_button)
     ImageButton prevButton;
     @BindView(R.id.player_next_button)
-    AppCompatButton nextButton;
+    ImageButton nextButton;
     @BindView(R.id.player_repeat_button)
     AppCompatButton repeatButton;
     @BindView(R.id.player_shuffle_button)
