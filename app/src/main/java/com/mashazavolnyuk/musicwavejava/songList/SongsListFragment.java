@@ -9,26 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
-
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.adpater.CustomTouchListener;
 import com.mashazavolnyuk.musicwavejava.adpater.SongsAdapter;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
-import com.mashazavolnyuk.musicwavejava.data.Song;
-
-
-import java.util.ArrayList;
 import java.util.Collections;
-
-import java.util.List;
 import java.util.Objects;
 
 public class SongsListFragment extends AbsPlayerFragment {
 
     private RecyclerView recyclerViewSongs;
-    List<Song> songList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -51,10 +42,5 @@ public class SongsListFragment extends AbsPlayerFragment {
                                 (view, index) -> MusicPlayerRemote.playSongAt(index)));
                     }
                 });
-    }
-
-    private void play(int index) {
-        Song song = songList.get(index);
-        ((IMusicProviderControl) Objects.requireNonNull(getActivity())).play(song);
     }
 }

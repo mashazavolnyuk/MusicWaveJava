@@ -16,8 +16,6 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.mashazavolnyuk.musicwavejava.BuildConfig;
-import com.mashazavolnyuk.musicwavejava.IMusicState;
-import com.mashazavolnyuk.musicwavejava.MainActivity;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
@@ -260,9 +258,8 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
         currentSong = song;
         position = index;
         playback.play();
-        Intent intent = new Intent(MainActivity.BROADCAST_ACTION_MUSIC);
-        intent.putExtra("MusicState", IMusicState.PLAY);
-        sendBroadcast(intent);
+        notifyChange(META_CHANGED);
+        notifyChange(PLAY_STATE_CHANGED);
     }
 
     public void setSongs(List<Song> songs) {
