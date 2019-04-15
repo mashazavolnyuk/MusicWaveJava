@@ -1,6 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,20 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
+import com.mashazavolnyuk.musicwavejava.util.ImageUtil;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 
 public class CardPlayerFragment extends AbsPlayerFragment {
 
@@ -37,7 +41,8 @@ public class CardPlayerFragment extends AbsPlayerFragment {
     @BindView(R.id.cover)
     ImageView coverView;
 
-    private CardPlayerPlaybackControlsFragment playbackControlsFragment;
+    @BindView(R.id.layoutCover)
+    LinearLayout coverBlurView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +54,6 @@ public class CardPlayerFragment extends AbsPlayerFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpSubFragments();
     }
 
     @Override
@@ -94,6 +98,8 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
                         //Set it in the ImageView
                         coverView.setImageBitmap(bitmap);
+                        Drawable d = new BitmapDrawable(getResources(), ImageUtil.blur(getActivity(),bitmap));
+                        coverBlurView.setBackground(d);
                     }
 
                     @Override
@@ -106,9 +112,5 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
                     }
                 });
-    }
-
-    private void setUpSubFragments() {
-        playbackControlsFragment = (CardPlayerPlaybackControlsFragment) getChildFragmentManager().findFragmentById(R.id.playback_controls_fragment);
     }
 }

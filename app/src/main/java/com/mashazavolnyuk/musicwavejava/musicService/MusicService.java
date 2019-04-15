@@ -82,11 +82,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
 
     @Override
     public void onTrackEnded() {
-        position ++;
-        currentSong = songList.get(position);
-        playback.setDataPath(currentSong.data);
-        playback.play();
-        notifyChange(MusicService.META_CHANGED);
+        playNextSong(true);
     }
 
     public void play() {
@@ -95,6 +91,23 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
 
     public boolean isPlaying() {
         return playback != null && playback.isPlaying();
+    }
+
+    public void playNextSong(boolean b) {
+        position ++;
+        currentSong = songList.get(position);
+        playback.setDataPath(currentSong.data);
+        playback.play();
+        notifyChange(MusicService.META_CHANGED);
+
+    }
+
+    public void playPreviousSong(boolean b) {
+        position --;
+        currentSong = songList.get(position);
+        playback.setDataPath(currentSong.data);
+        playback.play();
+        notifyChange(MusicService.META_CHANGED);
     }
 
     public class MusicBinder extends Binder {

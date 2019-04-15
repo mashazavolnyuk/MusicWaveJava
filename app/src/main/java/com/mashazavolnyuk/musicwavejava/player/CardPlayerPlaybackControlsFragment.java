@@ -1,14 +1,13 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,20 +25,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment implements MusicProgressViewUpdateHelper.Callback  {
+public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
 
     private Unbinder unbinder;
 
     @BindView(R.id.player_play_pause_fab)
-    FloatingActionButton playPauseFab;
+    AppCompatImageButton playPauseFab;
     @BindView(R.id.player_prev_button)
     ImageButton prevButton;
     @BindView(R.id.player_next_button)
-    ImageButton nextButton;
+    AppCompatButton nextButton;
     @BindView(R.id.player_repeat_button)
-    ImageButton repeatButton;
+    AppCompatButton repeatButton;
     @BindView(R.id.player_shuffle_button)
-    ImageButton shuffleButton;
+    AppCompatButton shuffleButton;
 
     @BindView(R.id.player_progress_slider)
     SeekBar progressSlider;
@@ -71,7 +70,6 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
         setUpMusicControllers();
-        updateProgressTextColor();
     }
 
     @Override
@@ -114,29 +112,12 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
         updateShuffleState();
     }
 
-    public void setDark(boolean dark) {
-//        if (dark) {
-//            lastPlaybackControlsColor = MaterialValueHelper.getSecondaryTextColor(getActivity(), true);
-//            lastDisabledPlaybackControlsColor = MaterialValueHelper.getSecondaryDisabledTextColor(getActivity(), true);
-//        } else {
-//            lastPlaybackControlsColor = MaterialValueHelper.getPrimaryTextColor(getActivity(), false);
-//            lastDisabledPlaybackControlsColor = MaterialValueHelper.getPrimaryDisabledTextColor(getActivity(), false);
-//        }
-//
-//        updateRepeatState();
-//        updateShuffleState();
-//        updatePrevNextColor();
-//        updateProgressTextColor();
-    }
+
 
     private void setUpPlayPauseFab() {
-        final int fabColor = Color.WHITE;
-//        TintHelper.setTintAuto(playPauseFab, fabColor, true);
 
         playerFabPlayPauseDrawable = new PlayPauseDrawable(getActivity());
-
-        playPauseFab.setImageDrawable(playerFabPlayPauseDrawable); // Note: set the drawable AFTER TintHelper.setTintAuto() was called
-//        playPauseFab.setColorFilter(MaterialValueHelper.getPrimaryTextColor(getContext(), ColorUtil.isColorLight(fabColor)), PorterDuff.Mode.SRC_IN);
+        playPauseFab.setImageDrawable(playerFabPlayPauseDrawable);
         playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
         playPauseFab.post(() -> {
             if (playPauseFab != null) {
@@ -165,17 +146,12 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     private void setUpPrevNext() {
         updatePrevNextColor();
         nextButton.setOnClickListener(v -> MusicPlayerRemote.playNextSong());
-        prevButton.setOnClickListener(v -> MusicPlayerRemote.back());
+        prevButton.setOnClickListener(v -> MusicPlayerRemote.playPreviousSong());
     }
 
-    private void updateProgressTextColor() {
-//        int color = MaterialValueHelper.getPrimaryTextColor(getContext(), false);
-//        songTotalTime.setTextColor(color);
-//        songCurrentProgress.setTextColor(color);
-    }
+
 
     private void updatePrevNextColor() {
-        nextButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
         prevButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
     }
 
@@ -186,10 +162,8 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     private void updateShuffleState() {
         switch (MusicPlayerRemote.getShuffleMode()) {
             case MusicService.SHUFFLE_MODE_SHUFFLE:
-                shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
                 break;
             default:
-                shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
                 break;
         }
     }
@@ -215,29 +189,9 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
 //        }
     }
 
-    public void show() {
-        playPauseFab.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .rotation(360f)
-                .setInterpolator(new DecelerateInterpolator())
-                .start();
-    }
-
-    public void hide() {
-        if (playPauseFab != null) {
-            playPauseFab.setScaleX(0f);
-            playPauseFab.setScaleY(0f);
-            playPauseFab.setRotation(0f);
-        }
-    }
 
     private void setUpProgressSlider() {
-//        int color = MaterialValueHelper.getPrimaryTextColor(getContext(), false);
-//        progressSlider.getThumb().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-//        progressSlider.getProgressDrawable().mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-//
-        progressSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener () {
+        progressSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {

@@ -59,54 +59,48 @@
 
         <ImageButton
             android:id="@+id/player_prev_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="-8dp"
-            android:layout_marginRight="-8dp"
-            android:layout_toLeftOf="@+id/dummy_fab"
             android:layout_toStartOf="@+id/dummy_fab"
-            android:padding="22dp"
-            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play"
+            android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/player_next_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="-8dp"
             android:layout_marginStart="-8dp"
             android:layout_toEndOf="@+id/dummy_fab"
-            android:layout_toRightOf="@+id/dummy_fab"
-            android:padding="22dp"
-            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play"
+            android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/player_repeat_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_alignParentLeft="true"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:padding="22dp"
-            android:scaleType="fitCenter"
+            android:drawableTop="@drawable/ic_play"
+            android:background="@drawable/ic_ripple"
             tools:ignore="MissingPrefix" />
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/player_shuffle_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:padding="22dp"
-            android:scaleType="fitCenter"
+            android:background="@drawable/ic_ripple"
+            android:drawableTop="@drawable/ic_play"
             tools:ignore="MissingPrefix" />
 
         <Space
@@ -115,13 +109,14 @@
             android:layout_height="56dp"
             android:layout_centerInParent="true" />
 
-        <android.support.design.widget.FloatingActionButton
+        <android.support.v7.widget.AppCompatImageButton
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:id="@+id/player_play_pause_fab"
             android:layout_centerInParent="true"
-            app:elevation="4dp"
-            app:pressedTranslationZ="2dp" />
+            android:background="@drawable/ic_gradient"/>
+            <!--app:elevation="4dp"-->
+            <!--app:pressedTranslationZ="2dp" />-->
 
     </RelativeLayout>
 

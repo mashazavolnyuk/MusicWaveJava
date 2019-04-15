@@ -1,25 +1,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="@dimen/minimum_margin_between_elements"
+    android:layout_marginTop="@dimen/minimum_margin_between_elements">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/coverSong"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:layout_alignParentLeft="true"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FFFFFFFF"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/round_rectangle"
-        />
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:contentDescription="@string/cover" />
+
     <TextView
         android:id="@+id/song_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_toRightOf="@id/coverSong"
-        android:textStyle="bold"
+        android:textSize="@dimen/size_title_text"
+        android:layout_toEndOf="@id/coverSong"
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:textColor="@color/colorAccent"
+        android:textStyle="normal"
         />
 
     <TextView
@@ -27,8 +35,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/song_title"
-        android:layout_toRightOf="@id/coverSong"
-        android:textSize="18sp"
+        android:layout_toEndOf="@id/coverSong"
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:textSize="@dimen/size_simple_text"
+        android:textStyle="italic"
         />
 
 </RelativeLayout>
