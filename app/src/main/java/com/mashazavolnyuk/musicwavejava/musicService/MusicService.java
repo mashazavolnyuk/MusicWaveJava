@@ -1,17 +1,24 @@
 package com.mashazavolnyuk.musicwavejava.musicService;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+
+import com.mashazavolnyuk.musicwavejava.BuildConfig;
 import com.mashazavolnyuk.musicwavejava.IMusicState;
 import com.mashazavolnyuk.musicwavejava.MainActivity;
+import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 import java.util.ArrayList;
@@ -72,6 +79,9 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     private MediaSessionCompat mediaSession;
     private MediaControllerCompat.TransportControls transportControls;
 
+    private Notification notification;
+    private String channelId = "musicWave";
+
     //Used to pause/resume MediaPlayer
     private int resumePosition;
 
@@ -126,6 +136,20 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new  NotificationChannel(channelId, "Alarm service", NotificationManager.IMPORTANCE_LOW);
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+            notification = new Notification.Builder(getApplicationContext(), channelId)
+                    .setContentTitle(BuildConfig.VERSION_NAME)
+                    .setContentText(getApplicationContext().getString(R.string.app_name))
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .build();
+            startForeground(22345, notification);
+        }
         if(songList.size()==0){
             songList = SongLoader.getSongList(this);
             Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
