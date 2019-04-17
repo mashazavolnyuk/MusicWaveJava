@@ -104,7 +104,9 @@ public class CardPlayerFragment extends AbsPlayerFragment {
 
                     @Override
                     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
+                        coverView.setImageBitmap(null);
+                        coverBlurView.setBackground(null);
+                        coverView.setBackground(ImageUtil.getDrawable(getActivity(),R.drawable.ic_music_note));
                     }
 
                     @Override

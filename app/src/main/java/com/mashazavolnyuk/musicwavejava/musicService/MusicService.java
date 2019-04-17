@@ -19,18 +19,22 @@ import com.mashazavolnyuk.musicwavejava.BuildConfig;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
+import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotification;
+import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotificationImpl24;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MusicService extends Service implements Playback.PlaybackCallbacks{
+public class MusicService extends Service implements Playback.PlaybackCallbacks {
 
     private String TAG = "MusicService";
 
     public static final String MUSIC_WAVE_PACKAGE_NAME = "com.mashazavolnyuk.musicwavejava";
 
     public static final String ACTION_PLAY = "com.mashazavolnyuk.musicwavejava.ACTION_PLAY";
+    public static final String ACTION_PLAY_PAUSE = "com.mashazavolnyuk.musicwavejava.ACTION_PLAY_PAUSE";
     public static final String ACTION_RESUME = "com.mashazavolnyuk.musicwavejava.ACTION_RESUME";
     public static final String ACTION_PAUSE = "com.mashazavolnyuk.musicwavejava.ACTION_PAUSE";
     public static final String ACTION_PREVIOUS = "com.mashazavolnyuk.musicwavejava.ACTION_PREVIOUS";
@@ -87,6 +91,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     private int position;
     private Song currentSong;
     private final IBinder musicBind = new MusicBinder();
+    PlayingNotification playingNotification;
 
     @Nullable
     @Override
@@ -106,30 +111,43 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
         super.onCreate();
         playback = new Player(this);
         playback.setCallbacks(this);
+        playingNotification = new PlayingNotificationImpl24();
+        playingNotification.init(this);
+        if (songList.size() == 0) {
+            songList = SongLoader.getSongList(this);
+            Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
+            currentSong = songList.get(0);
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new  NotificationChannel(channelId, "Alarm service", NotificationManager.IMPORTANCE_LOW);
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
-            notification = new Notification.Builder(getApplicationContext(), channelId)
-                    .setContentTitle(BuildConfig.VERSION_NAME)
-                    .setContentText(getApplicationContext().getString(R.string.app_name))
-                    .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-                    .build();
-            startForeground(22345, notification);
+            startForeground(22345, playingNotification.update());
         }
-        if(songList.size()==0){
-            songList = SongLoader.getSongList(this);
-            Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
+        if (intent != null) {
+            if (intent.getAction() != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case ACTION_PREVIOUS:
+                        playPreviousSong(true);
+                        break;
+                    case ACTION_NEXT:
+                        playNextSong(true);
+                        break;
+                    case ACTION_PLAY_PAUSE:
+                        if (isPlaying()) {
+                            pauseMedia();
+                        } else {
+                            playMedia();
+                        }
+                        break;
+                }
+            }
         }
         return START_NOT_STICKY;
     }
+
 
     private void notifyChange(@NonNull final String what) {
         sendBroadcast(new Intent(what));
@@ -235,7 +253,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     }
 
     public void playNextSong(boolean b) {
-        position ++;
+        position++;
         currentSong = songList.get(position);
         playback.setDataPath(currentSong.data);
         playback.play();
@@ -244,7 +262,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks{
     }
 
     public void playPreviousSong(boolean b) {
-        position --;
+        position--;
         currentSong = songList.get(position);
         playback.setDataPath(currentSong.data);
         playback.play();

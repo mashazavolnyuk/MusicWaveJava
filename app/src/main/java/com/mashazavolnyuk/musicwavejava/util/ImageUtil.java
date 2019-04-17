@@ -1,6 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,10 +10,17 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 
 public class ImageUtil {
 
@@ -66,8 +74,18 @@ public class ImageUtil {
         );
         canvas.drawRect(rectangle,paint);
         return image;
+    }
+
+    public static Drawable getDrawable(@NonNull Context context, @DrawableRes int id) {
+        return context.getResources().getDrawable(id,context.getTheme());
+    }
 
 
-
+    public static Bitmap createBitmap(Drawable drawable, float sizeMultiplier) {
+        Bitmap bitmap = Bitmap.createBitmap((int) (drawable.getIntrinsicWidth() * sizeMultiplier), (int) (drawable.getIntrinsicHeight() * sizeMultiplier), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        drawable.setBounds(0, 0, c.getWidth(), c.getHeight());
+        drawable.draw(c);
+        return bitmap;
     }
 }
