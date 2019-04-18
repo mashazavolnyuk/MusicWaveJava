@@ -150,8 +150,10 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     private void updateShuffleState() {
         switch (MusicPlayerRemote.getShuffleMode()) {
             case MusicService.SHUFFLE_MODE_SHUFFLE:
+                shuffleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_shuffle, getActivity().getTheme()));
                 break;
-            default:
+            case MusicService.SHUFFLE_MODE_NONE:
+                shuffleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_shuffle_none, getActivity().getTheme()));
                 break;
         }
     }

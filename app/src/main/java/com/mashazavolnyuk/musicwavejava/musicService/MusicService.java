@@ -1,24 +1,16 @@
 package com.mashazavolnyuk.musicwavejava.musicService;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 
-import com.mashazavolnyuk.musicwavejava.BuildConfig;
-import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.data.Song;
+import com.mashazavolnyuk.musicwavejava.helper.ShuffleHelper;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotification;
 import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotificationImpl24;
@@ -80,7 +72,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     //Used to pause/resume MediaPlayer
     private int resumePosition;
-
+    private List<Song> songListOriginal = new ArrayList<>();
     private List<Song> songList = new ArrayList<>();
     private int position;
     private int shuffleMode;
@@ -112,6 +104,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
         if (songList.size() == 0) {
             songList = SongLoader.getSongList(this);
             Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
+            songListOriginal = new ArrayList<>(songList);
             currentSong = songList.get(0);
         }
         restoreState();
@@ -147,8 +140,13 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     private void restoreState() {
         shuffleMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, SHUFFLE_MODE_NONE);
+        if(shuffleMode == SHUFFLE_MODE_SHUFFLE){
+            ShuffleHelper.makeShuffleList(songList, position);
+            position = 0;
+            handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+        }
         repeatMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, REPEAT_MODE_NONE);
-        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+
         handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
     }
 
@@ -181,6 +179,9 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
                 } //switch
             case REPEAT_MODE_CHANGED:
                 notifyChange(REPEAT_MODE_CHANGED);
+                break;
+            case SHUFFLE_MODE_CHANGED:
+                notifyChange(SHUFFLE_MODE_CHANGED);
                 break;
         }
     }
@@ -275,6 +276,44 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
                 return -1;
             }
         }
+    }
+
+    public void toggleShuffle() {
+        if (getShuffleMode() == SHUFFLE_MODE_NONE) {
+            setShuffleMode(SHUFFLE_MODE_SHUFFLE);
+        } else {
+            setShuffleMode(SHUFFLE_MODE_NONE);
+        }
+    }
+
+    public int getShuffleMode() {
+        return shuffleMode;
+    }
+
+    public void setShuffleMode(final int shuffleMode) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(SAVED_SHUFFLE_MODE, shuffleMode)
+                .apply();
+        switch (shuffleMode) {
+            case SHUFFLE_MODE_SHUFFLE:
+                this.shuffleMode = shuffleMode;
+                ShuffleHelper.makeShuffleList(songList, position);
+                position = 0;
+                break;
+            case SHUFFLE_MODE_NONE:
+                this.shuffleMode = shuffleMode;
+                int currentSongId = getCurrentSong().id;
+                songList = new ArrayList<>(songListOriginal);
+                int newPosition = 0;
+                for (Song song : songList) {
+                    if (song.id == currentSongId) {
+                        newPosition = songList.indexOf(song);
+                    }
+                }
+                position = newPosition;
+                break;
+        }
+        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
     }
 
     public void cycleRepeatMode() {

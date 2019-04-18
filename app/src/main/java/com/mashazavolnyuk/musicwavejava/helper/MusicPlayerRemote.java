@@ -264,7 +264,7 @@ public class MusicPlayerRemote {
 
     public static int getShuffleMode() {
         if (musicService != null) {
-           // return musicService.getShuffleMode();
+            return musicService.getShuffleMode();
         }
         return MusicService.SHUFFLE_MODE_NONE;
     }
@@ -279,7 +279,7 @@ public class MusicPlayerRemote {
 
     public static boolean toggleShuffleMode() {
         if (musicService != null) {
-           // musicService.toggleShuffle();
+            musicService.toggleShuffle();
             return true;
         }
         return false;

@@ -99,7 +99,6 @@
             android:layout_marginEnd="16dp"
             android:padding="22dp"
             android:background="@drawable/ic_ripple"
-            android:drawableTop="@drawable/ic_shuffle"
             tools:ignore="MissingPrefix" />
 
         <Space
