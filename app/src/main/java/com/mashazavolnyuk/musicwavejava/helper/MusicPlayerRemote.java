@@ -257,7 +257,7 @@ public class MusicPlayerRemote {
 
     public static int getRepeatMode() {
         if (musicService != null) {
-            //return musicService.getRepeatMode();
+            return musicService.getRepeatMode();
         }
         return MusicService.REPEAT_MODE_NONE;
     }
@@ -271,7 +271,7 @@ public class MusicPlayerRemote {
 
     public static boolean cycleRepeatMode() {
         if (musicService != null) {
-            //musicService.cycleRepeatMode();
+            musicService.cycleRepeatMode();
             return true;
         }
         return false;

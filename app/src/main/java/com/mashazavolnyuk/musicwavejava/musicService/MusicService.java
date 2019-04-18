@@ -10,6 +10,7 @@ import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -51,13 +52,14 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public static final String SHUFFLE_MODE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".mediastorechanged";
 
+    public static final String TRACK_ENDED = MUSIC_WAVE_PACKAGE_NAME + ".tack_ended";
+
     public static final String SAVED_POSITION = "POSITION";
     public static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
     public static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
     public static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
 
     public static final int RELEASE_WAKELOCK = 0;
-    public static final int TRACK_ENDED = 1;
     public static final int TRACK_WENT_TO_NEXT = 2;
     public static final int PLAY_SONG = 3;
     public static final int PREPARE_NEXT = 4;
@@ -76,19 +78,13 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     private Playback playback;
 
-    //MediaSession
-    private MediaSessionManager mediaSessionManager;
-    private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
-
-    private Notification notification;
-    private String channelId = "musicWave";
-
     //Used to pause/resume MediaPlayer
     private int resumePosition;
 
     private List<Song> songList = new ArrayList<>();
     private int position;
+    private int shuffleMode;
+    private int repeatMode;
     private Song currentSong;
     private final IBinder musicBind = new MusicBinder();
     PlayingNotification playingNotification;
@@ -118,6 +114,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
             Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
             currentSong = songList.get(0);
         }
+        restoreState();
     }
 
     @Override
@@ -148,104 +145,65 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
         return START_NOT_STICKY;
     }
 
+    private void restoreState() {
+        shuffleMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, SHUFFLE_MODE_NONE);
+        repeatMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, REPEAT_MODE_NONE);
+        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+    }
+
+    private void handleAndSendChangeInternal(@NonNull String what) {
+        switch (what) {
+            case TRACK_ENDED:
+                switch (getRepeatMode()) {
+                    case REPEAT_MODE_NONE:
+                        if (position >= songList.size() - 1) {
+                            pauseMedia();
+                            return;
+                        } else {
+                            playNextSong(true);
+                        }
+                        break;
+                    case REPEAT_MODE_THIS:
+                        seek(0);
+                        play();
+                        break;
+
+                    case REPEAT_MODE_ALL:
+                        position++;
+                        if (position >= songList.size() - 1) {
+                            position = 0;
+                        } else {
+                            position++;
+                        }
+                        playMedia(position);
+                        break;
+                } //switch
+            case REPEAT_MODE_CHANGED:
+                notifyChange(REPEAT_MODE_CHANGED);
+                break;
+        }
+    }
 
     private void notifyChange(@NonNull final String what) {
         sendBroadcast(new Intent(what));
     }
 
-    private void handleIncomingActions(Intent playbackAction) {
-        if (playbackAction == null || playbackAction.getAction() == null) return;
-
-        String actionString = playbackAction.getAction();
-        if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
-//            transportControls.play();
-            playMedia();
-        } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
-            // transportControls.pause();
-            pauseMedia();
-        } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
-            //  transportControls.skipToNext();
-        } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
-            //  transportControls.skipToPrevious();
-        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
-            //  transportControls.stop();
-            stopMedia();
+    public void updateNotification() {
+        if (playingNotification != null && getCurrentSong().id != -1) {
+            playingNotification.update();
         }
-    }
-
-    private void initMediaSession() {
-        if (mediaSessionManager != null) return; //mediaSessionManager exists
-        mediaSessionManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
-        // Create a new MediaSession
-        mediaSession = new MediaSessionCompat(getApplicationContext(), "AudioPlayer");
-        //Get MediaSessions transport controls
-        transportControls = mediaSession.getController().getTransportControls();
-        //set MediaSession -> ready to receive media commands
-        mediaSession.setActive(true);
-        //indicate that the MediaSession handles transport control commands
-        // through its MediaSessionCompat.Callback.
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Attach Callback to receive MediaSession updates
-        mediaSession.setCallback(new MediaSessionCompat.Callback() {
-            // Implement callbacks
-            @Override
-            public void onPlay() {
-                super.onPlay();
-
-                resumeMedia();
-//                buildNotification(PlaybackStatus.PLAYING);
-            }
-
-            @Override
-            public void onPause() {
-                super.onPause();
-
-                pauseMedia();
-//                buildNotification(PlaybackStatus.PAUSED);
-            }
-
-            @Override
-            public void onSkipToNext() {
-                super.onSkipToNext();
-
-//                skipToNext();
-//                updateMetaData();
-//                buildNotification(PlaybackStatus.PLAYING);
-            }
-
-            @Override
-            public void onSkipToPrevious() {
-                super.onSkipToPrevious();
-//
-//                skipToPrevious();
-//                updateMetaData();
-//                buildNotification(PlaybackStatus.PLAYING);
-            }
-
-            @Override
-            public void onStop() {
-                super.onStop();
-//                removeNotification();
-                //Stop the service
-                stopSelf();
-            }
-
-            @Override
-            public void onSeekTo(long position) {
-                super.onSeekTo(position);
-            }
-        });
     }
 
     @Override
     public void onTrackEnded() {
-        playNextSong(true);
+        handleAndSendChangeInternal(TRACK_ENDED);
     }
 
     public void play() {
         playback.play();
         notifyChange(PLAY_STATE_CHANGED);
+        updateNotification();
     }
 
     public boolean isPlaying() {
@@ -254,48 +212,57 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     public void playNextSong(boolean b) {
         position++;
-        currentSong = songList.get(position);
-        playback.setDataPath(currentSong.data);
-        playback.play();
-        notifyChange(MusicService.META_CHANGED);
-        notifyChange(MusicService.PLAY_STATE_CHANGED);
+        if (position >= songList.size()) {
+            position = songList.size();
+        } else {
+            position++;
+        }
+        playMedia(position);
     }
 
     public void playPreviousSong(boolean b) {
         position--;
-        currentSong = songList.get(position);
-        playback.setDataPath(currentSong.data);
-        playback.play();
-        notifyChange(MusicService.META_CHANGED);
-        notifyChange(MusicService.PLAY_STATE_CHANGED);
+        if (position == -1) {
+            position++;
+        }
+        playMedia(position);
     }
 
     public void playSongAt(int index) {
-        Song song = songList.get(index);
-        playback.setDataPath(song.data);
-        currentSong = song;
-        position = index;
-        playback.play();
-        notifyChange(META_CHANGED);
-        notifyChange(PLAY_STATE_CHANGED);
+        playMedia(index);
     }
 
     public void setSongs(List<Song> songs) {
         songList = songs;
     }
 
+    private void playMedia(int index) {
+        Song song = songList.get(index);
+        playback.setDataPath(song.data);
+        currentSong = song;
+        position = index;
+        playback.play();
+        notifyChange(META_CHANGED);
+        updateNotification();
+        notifyChange(PLAY_STATE_CHANGED);
+    }
+
     private void playMedia() {
         playback.play();
+        updateNotification();
         notifyChange(PLAY_STATE_CHANGED);
     }
 
     private void stopMedia() {
         playback.stop();
+        updateNotification();
+        notifyChange(PLAY_STATE_CHANGED);
     }
 
     public void pauseMedia() {
         if (playback.isPlaying()) {
             playback.pause();
+            updateNotification();
             notifyChange(PLAY_STATE_CHANGED);
         }
     }
@@ -303,16 +270,43 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public int seek(int millis) {
         synchronized (this) {
             try {
-                int newPosition = playback.seek(millis);
-                return newPosition;
+                return playback.seek(millis);
             } catch (Exception e) {
                 return -1;
             }
         }
     }
 
-    private void resumeMedia() {
+    public void cycleRepeatMode() {
+        switch (getRepeatMode()) {
+            case REPEAT_MODE_NONE:
+                setRepeatMode(REPEAT_MODE_ALL);
+                break;
+            case REPEAT_MODE_ALL:
+                setRepeatMode(REPEAT_MODE_THIS);
+                break;
+            default:
+                setRepeatMode(REPEAT_MODE_NONE);
+                break;
+        }
+    }
 
+    public void setRepeatMode(final int repeatMode) {
+        switch (repeatMode) {
+            case REPEAT_MODE_NONE:
+            case REPEAT_MODE_ALL:
+            case REPEAT_MODE_THIS:
+                this.repeatMode = repeatMode;
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putInt(SAVED_REPEAT_MODE, repeatMode)
+                        .apply();
+                handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+                break;
+        }
+    }
+
+    public int getRepeatMode() {
+        return repeatMode;
     }
 
     public int getSongProgressMillis() {
@@ -326,5 +320,6 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public Song getCurrentSong() {
         return currentSong;
     }
+
 
 }

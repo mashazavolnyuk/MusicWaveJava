@@ -161,20 +161,17 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     }
 
     private void updateRepeatState() {
-//        switch (MusicPlayerRemote.getRepeatMode()) {
-//            case MusicService.REPEAT_MODE_NONE:
-//                repeatButton.setImageResource(R.drawable.ic_repeat_white_24dp);
-//                repeatButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-//                break;
-//            case MusicService.REPEAT_MODE_ALL:
-//                repeatButton.setImageResource(R.drawable.ic_repeat_white_24dp);
-//                repeatButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-//                break;
-//            case MusicService.REPEAT_MODE_THIS:
-//                repeatButton.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-//                repeatButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-//                break;
-//        }
+        switch (MusicPlayerRemote.getRepeatMode()) {
+            case MusicService.REPEAT_MODE_NONE:
+                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeat_none, getActivity().getTheme()));
+                break;
+            case MusicService.REPEAT_MODE_ALL:
+                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeat, getActivity().getTheme()));
+                break;
+            case MusicService.REPEAT_MODE_THIS:
+                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeate_once, getActivity().getTheme()));
+                break;
+        }
     }
 
 
