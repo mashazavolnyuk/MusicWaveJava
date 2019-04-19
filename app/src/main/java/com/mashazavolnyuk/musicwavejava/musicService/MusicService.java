@@ -109,14 +109,14 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
             songListOriginal = new ArrayList<>(songList);
             currentSong = songList.get(0);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(PlayingNotification.NOTIFICATION_ID, playingNotification.update());
+        }
         restoreState();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(22345, playingNotification.update());
-        }
         if (intent != null) {
             if (intent.getAction() != null) {
                 String action = intent.getAction();

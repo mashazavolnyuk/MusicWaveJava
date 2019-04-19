@@ -12,12 +12,16 @@ import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public abstract class PlayingNotification {
-
-    private static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID = 1;
     static final String NOTIFICATION_CHANNEL_ID = "playing_notification";
 
+    private static final int NOTIFY_MODE_FOREGROUND = 1;
+    private static final int NOTIFY_MODE_BACKGROUND = 0;
+
+    private int notifyMode = NOTIFY_MODE_BACKGROUND;
+
     private NotificationManager notificationManager;
-    protected MusicService service;
+    MusicService service;
 
     public synchronized void init(MusicService service) {
         this.service = service;
@@ -28,6 +32,25 @@ public abstract class PlayingNotification {
     }
 
     public abstract Notification update();
+
+    void updateNotifyModeAndPostNotification(Notification notification) {
+        int newNotifyMode;
+        if (service.isPlaying()) {
+            newNotifyMode = NOTIFY_MODE_FOREGROUND;
+        } else {
+            newNotifyMode = NOTIFY_MODE_BACKGROUND;
+        }
+
+        if (notifyMode != newNotifyMode && newNotifyMode == NOTIFY_MODE_BACKGROUND) {
+            service.stopForeground(false);
+        }
+        if (newNotifyMode == NOTIFY_MODE_FOREGROUND) {
+            service.startForeground(NOTIFICATION_ID, notification);
+        } else {
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        }
+        notifyMode = newNotifyMode;
+    }
 
     @RequiresApi(26)
     private void createNotificationChannel() {

@@ -24,7 +24,8 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
         final RemoteViews notificationLayout = new RemoteViews(service.getPackageName(), R.layout.notification);
         linkButtons(notificationLayout);
         updateContent(song, notificationLayout);
-        return new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
+        Notification notification
+         = new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_music_circle)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -32,6 +33,8 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
                 .setContent(notificationLayout)
                 .setOngoing(isPlaying)
                 .build();
+        updateNotifyModeAndPostNotification(notification);
+        return notification;
     }
 
     private void updateContent(Song song, RemoteViews notificationLayout) {
