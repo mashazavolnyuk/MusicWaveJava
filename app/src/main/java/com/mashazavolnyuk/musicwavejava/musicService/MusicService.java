@@ -44,6 +44,8 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public static final String SHUFFLE_MODE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = MUSIC_WAVE_PACKAGE_NAME + ".mediastorechanged";
 
+    public static final String INTENT_EXTRA_SHUFFLE_MODE = MUSIC_WAVE_PACKAGE_NAME + ".intentextra.shufflemode";
+
     public static final String TRACK_ENDED = MUSIC_WAVE_PACKAGE_NAME + ".tack_ended";
 
     public static final String SAVED_POSITION = "POSITION";
@@ -132,6 +134,16 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
                             playMedia();
                         }
                         break;
+                    case ACTION_PLAY:
+                        int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, SHUFFLE_MODE_NONE);
+                        if (shuffleMode != SHUFFLE_MODE_NONE) {
+                            if (isPlaying()) {
+                                stopMedia();
+                            }
+                            setShuffleMode(SHUFFLE_MODE_SHUFFLE);
+                            playSongAt(position);
+                        }
+                        break;
                 }
             }
         }
@@ -140,7 +152,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     private void restoreState() {
         shuffleMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, SHUFFLE_MODE_NONE);
-        if(shuffleMode == SHUFFLE_MODE_SHUFFLE){
+        if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(songList, position);
             position = 0;
             handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);

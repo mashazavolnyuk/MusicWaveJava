@@ -1,7 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,17 +9,16 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.annotation.ColorInt;
+
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.graphics.drawable.VectorDrawableCompat;
+
 
 public class ImageUtil {
 
@@ -76,10 +74,14 @@ public class ImageUtil {
         return image;
     }
 
+    public static Bitmap getBitmap(@NonNull Context context, @DrawableRes int id) {
+       Drawable drawable = context.getResources().getDrawable(id,context.getTheme());
+        return createBitmap(drawable,1);
+    }
+
     public static Drawable getDrawable(@NonNull Context context, @DrawableRes int id) {
         return context.getResources().getDrawable(id,context.getTheme());
     }
-
 
     public static Bitmap createBitmap(Drawable drawable, float sizeMultiplier) {
         Bitmap bitmap = Bitmap.createBitmap((int) (drawable.getIntrinsicWidth() * sizeMultiplier), (int) (drawable.getIntrinsicHeight() * sizeMultiplier), Bitmap.Config.ARGB_8888);
