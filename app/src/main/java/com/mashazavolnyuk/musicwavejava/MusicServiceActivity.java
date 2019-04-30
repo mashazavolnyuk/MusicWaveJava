@@ -7,29 +7,48 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
-import com.mashazavolnyuk.musicwavejava.base.BaseActivity;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class MusicServiceActivity extends BaseActivity implements MusicServiceEventListener {
+public abstract class MusicServiceActivity extends AppCompatActivity implements MusicServiceEventListener {
 
     private final ArrayList<MusicServiceEventListener> mMusicServiceEventListeners = new ArrayList<>();
 
     private MusicPlayerRemote.ServiceToken serviceToken;
     private MusicStateReceiver musicStateReceiver;
     private boolean receiverRegistered;
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static final int PERMISSION_REQUEST = 100;
+    public boolean readyToStart = true;
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (checkPermissions()) {
+            makeContent();
+            bindToService();
+        } else {
+            requestPermissions();
+        }
+    }
+
+    private void bindToService() {
         serviceToken = MusicPlayerRemote.bindToService(this, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -41,11 +60,11 @@ public abstract class MusicServiceActivity extends BaseActivity implements Music
                 MusicServiceActivity.this.onServiceDisconnected();
             }
         });
-
-        setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied));
     }
 
-    @Override
+    abstract void makeContent();
+
+
     protected void onDestroy() {
         super.onDestroy();
         MusicPlayerRemote.unbindFromService(serviceToken);
@@ -54,6 +73,78 @@ public abstract class MusicServiceActivity extends BaseActivity implements Music
             receiverRegistered = false;
         }
     }
+
+    private boolean checkPermissions() {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        return listPermissionsNeeded.isEmpty();
+    }
+
+    protected void requestPermissions() {
+        if (permissions != null) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MusicServiceActivity.this, permissions[i])) {
+                        ActivityCompat.requestPermissions(this, new String[]{
+                                        permissions[i]
+                                },
+                                PERMISSION_REQUEST);
+                        readyToStart = false;
+                    } else {
+                        showNoStoragePermissionSnackbar();
+                        readyToStart = false;
+                    }
+                }
+            }//for
+            if(readyToStart){
+                bindToService();
+                makeContent();
+            }
+        }
+    }
+
+    public void showNoStoragePermissionSnackbar() {
+        Snackbar.make(getWindow().getDecorView(), "Storage permission isn't granted", Snackbar.LENGTH_LONG)
+                .setAction("SETTINGS", v -> {
+                    openApplicationSettings();
+                    Toast.makeText(getApplicationContext(),
+                            "Open Permissions and grant the Storage permission",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }).show();
+    }
+
+    public void openApplicationSettings() {
+        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:" + getPackageName()));
+        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PERMISSION_REQUEST) {
+            bindToService();
+            makeContent();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     public void addMusicServiceEventListener(final MusicServiceEventListener listener) {
         if (listener != null) {
@@ -171,43 +262,31 @@ public abstract class MusicServiceActivity extends BaseActivity implements Music
         @Override
         public void onReceive(final Context context, @NonNull final Intent intent) {
             final String action = intent.getAction();
-           MusicServiceActivity activity = reference.get();
+            MusicServiceActivity activity = reference.get();
             if (activity != null) {
-                switch (action) {
-                    case MusicService.META_CHANGED:
-                        activity.onPlayingMetaChanged();
-                        break;
-                    case MusicService.QUEUE_CHANGED:
-                        activity.onQueueChanged();
-                        break;
-                    case MusicService.PLAY_STATE_CHANGED:
-                        activity.onPlayStateChanged();
-                        break;
-                    case MusicService.REPEAT_MODE_CHANGED:
-                        activity.onRepeatModeChanged();
-                        break;
-                    case MusicService.SHUFFLE_MODE_CHANGED:
-                        activity.onShuffleModeChanged();
-                        break;
-                    case MusicService.MEDIA_STORE_CHANGED:
-                        activity.onMediaStoreChanged();
-                        break;
+                if (action != null) {
+                    switch (action) {
+                        case MusicService.META_CHANGED:
+                            activity.onPlayingMetaChanged();
+                            break;
+                        case MusicService.QUEUE_CHANGED:
+                            activity.onQueueChanged();
+                            break;
+                        case MusicService.PLAY_STATE_CHANGED:
+                            activity.onPlayStateChanged();
+                            break;
+                        case MusicService.REPEAT_MODE_CHANGED:
+                            activity.onRepeatModeChanged();
+                            break;
+                        case MusicService.SHUFFLE_MODE_CHANGED:
+                            activity.onShuffleModeChanged();
+                            break;
+                        case MusicService.MEDIA_STORE_CHANGED:
+                            activity.onMediaStoreChanged();
+                            break;
+                    }
                 }
             }
         }
-    }
-
-    @Override
-    protected void onHasPermissionsChanged(boolean hasPermissions) {
-        super.onHasPermissionsChanged(hasPermissions);
-        Intent intent = new Intent(MusicService.MEDIA_STORE_CHANGED);
-        intent.putExtra("from_permissions_changed", true); // just in case we need to know this at some point
-        sendBroadcast(intent);
-    }
-
-    @Nullable
-    @Override
-    protected String[] getPermissionsToRequest() {
-        return new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     }
 }

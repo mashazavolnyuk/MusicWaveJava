@@ -173,11 +173,6 @@ public abstract class SlidingMusicPanelActivity extends MusicServiceActivity imp
         return false;
     }
 
-    @Override
-    protected View getSnackBarContainer() {
-        return findViewById(R.id.content_container);
-    }
-
 }
 
 
