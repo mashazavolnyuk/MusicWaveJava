@@ -38,7 +38,7 @@ public class MainActivity extends SlidingMusicPanelActivity {
 
     private void toSongsList() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        SongsListFragment fragmentCountriesList = new SongsListFragment();
-        fragmentManager.beginTransaction().replace(R.id.content, fragmentCountriesList).commit();
+        MainFragmentNavigation fragmentNavigation = new MainFragmentNavigation();
+        fragmentManager.beginTransaction().replace(R.id.content, fragmentNavigation).commit();
     }
 }
