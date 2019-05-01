@@ -23,7 +23,7 @@ public class MainActivity extends SlidingMusicPanelActivity {
     }
 
     @Override
-    void makeContent() {
+    public void makeContent() {
         toSongsList();
     }
 

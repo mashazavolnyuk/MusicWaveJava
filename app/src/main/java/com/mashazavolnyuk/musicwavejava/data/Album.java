@@ -1,11 +1,13 @@
 package com.mashazavolnyuk.musicwavejava.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Album {
+public class Album implements Parcelable {
 
     public final List<Song> songs;
 
@@ -16,6 +18,22 @@ public class Album {
     public Album() {
         this.songs = new ArrayList<>();
     }
+
+    protected Album(Parcel in) {
+        this.songs = in.createTypedArrayList(Song.CREATOR);
+    }
+
+    public static final Creator<Album> CREATOR = new Creator<Album>() {
+        @Override
+        public Album createFromParcel(Parcel in) {
+            return new Album(in);
+        }
+
+        @Override
+        public Album[] newArray(int size) {
+            return new Album[size];
+        }
+    };
 
     public int getId() {
         return safeGetFirstSong().albumId;
@@ -51,4 +69,13 @@ public class Album {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(songs);
+    }
 }

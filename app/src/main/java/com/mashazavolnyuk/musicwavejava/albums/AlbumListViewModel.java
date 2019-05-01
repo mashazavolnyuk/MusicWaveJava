@@ -29,4 +29,7 @@ public class AlbumListViewModel extends ViewModel {
     private void loadAlbums() {
         albumModel.loadAllAlbums(albums -> songsLiveData.postValue(albums));
     }
+    public Album getAlbumByIndex(int index){
+        return songsLiveData.getValue().get(index);
+    }
 }

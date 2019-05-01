@@ -1,6 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.albums;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +13,6 @@ import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.adpater.AlbumsAdapter;
 import com.mashazavolnyuk.musicwavejava.adpater.CustomTouchListener;
-import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -26,6 +26,7 @@ public class FragmentAlbums extends AbsPlayerFragment {
     private Unbinder unbinder;
     @BindView(R.id.rValbums)
     public RecyclerView recyclerViewSongs;
+    AlbumListViewModel model;
 
     @Nullable
     @Override
@@ -43,15 +44,22 @@ public class FragmentAlbums extends AbsPlayerFragment {
     }
 
     private void fillAlbumsData() {
-        AlbumListViewModel model = ViewModelProviders.of(this).get(AlbumListViewModel.class);
+        model = ViewModelProviders.of(this).get(AlbumListViewModel.class);
         model.getAlbums(Objects.requireNonNull(getActivity()).
                 getApplication()).observe(this, albums -> {
             if (albums != null) {
                 Collections.sort(albums, (a, b) -> a.getTitle().compareTo(b.getTitle()));
                 recyclerViewSongs.setAdapter(new AlbumsAdapter(albums));
                 recyclerViewSongs.addOnItemTouchListener(new CustomTouchListener(FragmentAlbums.this.getActivity(),
-                        (view, index) -> MusicPlayerRemote.playSongAt(index)));
+                        (view, index) -> showDetail(index)));
             }
         });
+    }
+
+    private void showDetail(int index){
+        model.getAlbumByIndex(index);
+        Intent intent= new Intent(getActivity(),AlbumDetail.class);
+        intent.putExtra(AlbumDetail.EXTRA_ALBUM_ID,model.getAlbumByIndex(index));
+        startActivity(intent);
     }
 }
