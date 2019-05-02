@@ -1,21 +1,14 @@
 package com.mashazavolnyuk.musicwavejava;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.mashazavolnyuk.musicwavejava.songList.SongsListFragment;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends SlidingMusicPanelActivity {
-
+    FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +30,30 @@ public class MainActivity extends SlidingMusicPanelActivity {
     }
 
     private void toSongsList() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         MainFragmentNavigation fragmentNavigation = new MainFragmentNavigation();
         fragmentManager.beginTransaction().replace(R.id.content, fragmentNavigation).commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (slidingUpPanelLayout != null) {
+            if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+            else {
+                backStackFragments();
+            }
+        }else {
+            backStackFragments();
+        }
+    }
+
+    private void backStackFragments(){
+        if (fragmentManager.getBackStackEntryCount() == 0) {
+            finish();
+        }
+    }
+
 }

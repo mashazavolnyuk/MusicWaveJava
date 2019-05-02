@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public abstract class SlidingMusicPanelActivity extends MusicServiceActivity implements SlidingUpPanelLayout.PanelSlideListener {
 
     @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout slidingUpPanelLayout;
+    protected SlidingUpPanelLayout slidingUpPanelLayout;
 
     private AbsPlayerFragment playerFragment;
     private MiniPlayerFragment miniPlayerFragment;
