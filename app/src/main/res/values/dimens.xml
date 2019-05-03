@@ -7,9 +7,9 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="minimum_margin_between_elements">4dp</dimen>
+    <dimen name="minimum_border_circle">1dp</dimen>
 
     <dimen name="mini_player_height">56dp</dimen>
-
 
     <dimen name="pause_bar_width">5dp</dimen>
     <dimen name="pause_bar_distance">4dp</dimen>

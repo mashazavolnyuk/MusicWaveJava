@@ -1,6 +1,5 @@
 package com.mashazavolnyuk.musicwavejava;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -26,9 +25,7 @@ import butterknife.Unbinder;
 
 public class MainFragmentNavigation extends Fragment {
 
-
     private Unbinder unbinder;
-
     @BindView(R.id.appbar)
     public AppBarLayout appbar;
     @BindView(R.id.toolbar)
@@ -69,7 +66,7 @@ public class MainFragmentNavigation extends Fragment {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -83,7 +80,7 @@ public class MainFragmentNavigation extends Fragment {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

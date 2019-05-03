@@ -7,11 +7,11 @@ import android.os.Bundle;
 
 public abstract class BaseShortcut {
 
-    static final String ID_PREFIX = "com.kabouzeid.gramophone.appshortcuts.id.";
+    static final String ID_PREFIX = "com.mashazavolnyuk.musicwavejava.shortcurts.id.";
 
     Context context;
 
-    public BaseShortcut(Context context) {
+    BaseShortcut(Context context) {
         this.context = context;
     }
 
@@ -21,17 +21,11 @@ public abstract class BaseShortcut {
 
     abstract ShortcutInfo getShortcutInfo();
 
-    /**
-     * Creates an Intent that will launch MainActivtiy and immediately play {@param songs} in either shuffle or normal mode
-     *
-     * @param shortcutType Describes the type of shortcut to create (ShuffleAll, TopTracks, custom playlist, etc.)
-     * @return
-     */
-    Intent getPlaySongsIntent(int shortcutType) {
+    Intent getPlaySongsIntent() {
         Intent intent = new Intent(context, AppShortcutLauncherActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
         Bundle b = new Bundle();
-        b.putInt(AppShortcutLauncherActivity.KEY_SHORTCUT_TYPE, shortcutType);
+        b.putInt(AppShortcutLauncherActivity.KEY_SHORTCUT_TYPE, AppShortcutLauncherActivity.SHORTCUT_TYPE_SHUFFLE_ALL);
         intent.putExtras(b);
         return intent;
     }

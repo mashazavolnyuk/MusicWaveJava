@@ -2,7 +2,6 @@ package com.mashazavolnyuk.musicwavejava.shortcurts;
 
 import android.content.Context;
 import android.content.pm.ShortcutInfo;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -26,7 +25,7 @@ public class ShuffleAllShortcut extends BaseShortcut {
                 .setShortLabel(context.getString(R.string.app_shortcut_shuffle_all_short))
                 .setLongLabel(context.getString(R.string.app_shortcut_shuffle_all_short))
                 .setIcon(Icon.createWithBitmap(ImageUtil.getBitmap(context, R.drawable.ic_shuffle)))
-                .setIntent(getPlaySongsIntent(AppShortcutLauncherActivity.SHORTCUT_TYPE_SHUFFLE_ALL))
+                .setIntent(getPlaySongsIntent())
                 .build();
     }
 }

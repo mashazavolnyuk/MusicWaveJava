@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mini_player_height"
+    android:layout_marginStart="@dimen/minimum_margin_between_elements"
+    android:layout_marginEnd="@dimen/minimum_margin_between_elements"
     android:background="@android:color/white"
-    android:clickable="true"
     android:focusable="false"
     android:transitionName="@string/transition_mini_player"
     tools:ignore="UnusedAttribute">
@@ -17,23 +18,23 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/mini_player_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="16dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/ic_expand_less_white_24dp"
+            android:layout_marginStart="@dimen/minimum_margin_between_elements"
+            android:layout_marginEnd="@dimen/minimum_margin_between_elements"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/mini_player_title"
             android:layout_width="0dp"
             android:text="text"
+            android:textSize="@dimen/size_simple_text"
             android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:singleLine="true"
@@ -44,10 +45,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:scaleType="center"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
     </LinearLayout>
 

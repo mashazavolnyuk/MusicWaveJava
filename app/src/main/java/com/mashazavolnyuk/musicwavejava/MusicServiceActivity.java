@@ -162,7 +162,6 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
     public void onServiceConnected() {
         if (!receiverRegistered) {
             musicStateReceiver = new MusicStateReceiver(this);
-
             final IntentFilter filter = new IntentFilter();
             filter.addAction(MusicService.PLAY_STATE_CHANGED);
             filter.addAction(MusicService.SHUFFLE_MODE_CHANGED);
@@ -170,9 +169,7 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
             filter.addAction(MusicService.META_CHANGED);
             filter.addAction(MusicService.QUEUE_CHANGED);
             filter.addAction(MusicService.MEDIA_STORE_CHANGED);
-
             registerReceiver(musicStateReceiver, filter);
-
             receiverRegistered = true;
         }
 

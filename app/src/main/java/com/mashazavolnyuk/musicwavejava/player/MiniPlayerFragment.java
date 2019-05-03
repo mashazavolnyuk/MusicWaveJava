@@ -1,7 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.player;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.MusicServiceFragment;
@@ -19,6 +17,8 @@ import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.helper.MusicProgressViewUpdateHelper;
 import com.mashazavolnyuk.musicwavejava.helper.PlayPauseButtonOnClickHandler;
 import com.mashazavolnyuk.musicwavejava.view.PlayPauseDrawable;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +53,7 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
         setUpPlayPauseButton();
@@ -95,7 +95,7 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
 
 
     private void setUpPlayPauseButton() {
-        playPauseDrawable = new PlayPauseDrawable(getActivity());
+        playPauseDrawable = new PlayPauseDrawable(Objects.requireNonNull(getActivity()));
         playPauseDrawable.setColor(Color.GRAY);
         miniPlayerPlayPauseButton.setImageDrawable(playPauseDrawable);
         miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());

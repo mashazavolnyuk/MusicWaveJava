@@ -24,20 +24,18 @@ public class AppShortcutLauncherActivity extends Activity {
             shortcutType = extras.getInt(KEY_SHORTCUT_TYPE, 0);
         }
 
-        switch (shortcutType) {
-            case SHORTCUT_TYPE_SHUFFLE_ALL:
-                startService(MusicService.SHUFFLE_MODE_SHUFFLE);
-                DynamicShortcutManager.reportShortcutUsed(this, ShuffleAllShortcut.getId());
-                break;
+        if (shortcutType == SHORTCUT_TYPE_SHUFFLE_ALL) {
+            startService();
+            DynamicShortcutManager.reportShortcutUsed(this, ShuffleAllShortcut.getId());
         }
         finish();
     }
 
-    private void startService(int shuffleMode) {
+    private void startService() {
         Intent intent = new Intent(this, MusicService.class);
         intent.setAction(MusicService.ACTION_PLAY);
         Bundle bundle = new Bundle();
-        bundle.putInt(MusicService.INTENT_EXTRA_SHUFFLE_MODE, shuffleMode);
+        bundle.putInt(MusicService.INTENT_EXTRA_SHUFFLE_MODE, MusicService.SHUFFLE_MODE_SHUFFLE);
         intent.putExtras(bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);

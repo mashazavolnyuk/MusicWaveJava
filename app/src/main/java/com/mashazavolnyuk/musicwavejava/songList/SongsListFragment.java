@@ -11,10 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
-import com.mashazavolnyuk.musicwavejava.adpater.CustomTouchListener;
 import com.mashazavolnyuk.musicwavejava.adpater.SongsAdapter;
-import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
-import java.util.Collections;
 import java.util.Objects;
 
 public class SongsListFragment extends AbsPlayerFragment {

@@ -126,7 +126,6 @@ public abstract class SlidingMusicPanelActivity extends MusicServiceActivity imp
         miniPlayerFragment.getView().setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
     }
 
-
     public SlidingUpPanelLayout.PanelState getPanelState() {
         return slidingUpPanelLayout == null ? null : slidingUpPanelLayout.getPanelState();
     }
@@ -148,8 +147,8 @@ public abstract class SlidingMusicPanelActivity extends MusicServiceActivity imp
         }
     }
 
+    @SuppressLint("InflateParams")
     protected View wrapSlidingMusicPanel(@LayoutRes int resId) {
-        @SuppressLint("InflateParams")
         View slidingMusicPanelLayout = getLayoutInflater().inflate(R.layout.sliding_music_panel, null);
         ViewGroup contentContainer = slidingMusicPanelLayout.findViewById(R.id.content_container);
         getLayoutInflater().inflate(resId, contentContainer);
@@ -164,7 +163,6 @@ public abstract class SlidingMusicPanelActivity extends MusicServiceActivity imp
 
     public boolean handleBackPress() {
         if (slidingUpPanelLayout.getPanelHeight() != 0)
-//                && playerFragment.onBackPressed())
             return true;
         if (getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             collapsePanel();

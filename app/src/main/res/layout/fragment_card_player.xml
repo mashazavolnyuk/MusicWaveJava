@@ -23,7 +23,7 @@
             android:layout_width="260dp"
             android:layout_height="260dp"
             android:layout_centerInParent="true"
-            app:civ_border_width="1dp" />
+            app:civ_border_width="@dimen/minimum_border_circle" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/cover"
@@ -31,8 +31,8 @@
             android:layout_height="220dp"
             android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
-            app:civ_border_color="#FFFFFFFF"
-            app:civ_border_width="1dp" />
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/minimum_border_circle" />
     </RelativeLayout>
 
     <LinearLayout
@@ -47,10 +47,10 @@
             android:id="@+id/artistName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:text="text"
+            android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:text="@string/unknown"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/size_big_title_text"
@@ -60,9 +60,9 @@
             android:id="@+id/songTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:text="text"
+            android:layout_marginStart="@dimen/minimum_margin_between_elements"
+            android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:text="@string/unknown"
             android:textAlignment="center"
             android:textColor="@color/colorTitle"
             android:textSize="@dimen/size_title_text"

@@ -40,42 +40,34 @@ public abstract class MusicServiceFragment extends Fragment implements MusicServ
 
     @Override
     public void onPlayingMetaChanged() {
-
     }
 
     @Override
     public void onServiceConnected() {
-
     }
 
     @Override
     public void onServiceDisconnected() {
-
     }
 
     @Override
     public void onQueueChanged() {
-
     }
 
     @Override
     public void onPlayStateChanged() {
-
     }
 
     @Override
     public void onRepeatModeChanged() {
-
     }
 
     @Override
     public void onShuffleModeChanged() {
-
     }
 
     @Override
     public void onMediaStoreChanged() {
-
     }
 
 

@@ -21,7 +21,6 @@ public class MusicUtil {
 
     public static Uri getMediaStoreAlbumCoverUri(int albumId) {
         final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
         return ContentUris.withAppendedId(sArtworkUri, albumId);
     }
 
