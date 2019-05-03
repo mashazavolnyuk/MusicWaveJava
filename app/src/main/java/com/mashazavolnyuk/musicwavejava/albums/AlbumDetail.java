@@ -1,24 +1,17 @@
-package com.mashazavolnyuk.musicwavejava;
+package com.mashazavolnyuk.musicwavejava.albums;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.SlidingMusicPanelActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-public class MainActivity extends SlidingMusicPanelActivity {
-    FragmentManager fragmentManager;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("MainActivity", "onCreate()");
-    }
+public class AlbumDetail extends SlidingMusicPanelActivity {
 
-    @Override
-    public void makeContent() {
-        toSongsList();
-    }
+    public static final String EXTRA_ALBUM_ID = "extra_album_id";
+    private FragmentManager fragmentManager;
 
     @Override
     protected View createContentView() {
@@ -29,9 +22,16 @@ public class MainActivity extends SlidingMusicPanelActivity {
         return contentView;
     }
 
-    private void toSongsList() {
+    @Override
+    public void makeContent() {
+        showDetailAlbum();
+    }
+
+    private void showDetailAlbum(){
         fragmentManager = getSupportFragmentManager();
-        MainFragmentNavigation fragmentNavigation = new MainFragmentNavigation();
+        FragmentDetailAlbum fragmentNavigation = new FragmentDetailAlbum();
+        Bundle extras = getIntent().getExtras();
+        fragmentNavigation.setArguments(extras);
         fragmentManager.beginTransaction().replace(R.id.content, fragmentNavigation).commit();
     }
 

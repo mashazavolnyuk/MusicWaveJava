@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    android:id="@+id/album_parent"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/coverAlbum"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:contentDescription="@string/cover"
+        app:civ_border_color="#FFFFFFFF"
+        app:civ_border_width="1dp" />
+
+    <TextView
+        android:id="@+id/nameAlbum"
+        android:singleLine="true"
+        android:layout_gravity="center"
+        android:layout_width="151dp"
+        android:layout_height="30dp" />
+</LinearLayout>

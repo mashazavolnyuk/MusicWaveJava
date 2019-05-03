@@ -1,11 +1,9 @@
 package com.mashazavolnyuk.musicwavejava.songList;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.model.SongModel;
@@ -15,11 +13,10 @@ import java.util.List;
 public class SongListViewModel extends ViewModel {
 
     private MutableLiveData<List<Song>> songsLiveData;
-    private WeakReference<Application> contextWeakReference;
     private SongModel songModel;
 
     LiveData<List<Song>> getSongs(Application application) {
-        contextWeakReference = new WeakReference<>(application);
+        WeakReference<Application> contextWeakReference = new WeakReference<>(application);
         songModel = new SongModel(contextWeakReference.get());
         if (songsLiveData == null) {
             songsLiveData = new MutableLiveData<>();

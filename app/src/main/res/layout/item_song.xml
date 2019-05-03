@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="@dimen/minimum_margin_between_elements"
+    android:id="@+id/parent_item_music"
     android:layout_marginTop="@dimen/minimum_margin_between_elements">
 
     <de.hdodenhof.circleimageview.CircleImageView

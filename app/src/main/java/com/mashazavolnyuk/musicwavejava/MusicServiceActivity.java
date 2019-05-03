@@ -62,7 +62,7 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
         });
     }
 
-    abstract void makeContent();
+    public abstract void makeContent();
 
 
     protected void onDestroy() {
