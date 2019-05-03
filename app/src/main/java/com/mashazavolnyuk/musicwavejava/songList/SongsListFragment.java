@@ -35,11 +35,8 @@ public class SongsListFragment extends AbsPlayerFragment {
         model.getSongs(Objects.requireNonNull(getActivity()).
                 getApplication()).observe(this, songs -> {
                     if (songs != null) {
-                        Collections.sort(songs, (a, b) -> a.getTitle().compareTo(b.getTitle()));
                         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        recyclerViewSongs.setAdapter(new SongsAdapter(songs));
-                        recyclerViewSongs.addOnItemTouchListener(new CustomTouchListener(SongsListFragment.this.getActivity(),
-                                (view, index) -> MusicPlayerRemote.playSongAt(index)));
+                        recyclerViewSongs.setAdapter(new SongsAdapter(songs,R.layout.item_song));
                     }
                 });
     }

@@ -105,7 +105,6 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
         playingNotification.init(this);
         if (songList.size() == 0) {
             songList = SongLoader.getSongList(this);
-            Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
             songListOriginal = new ArrayList<>(songList);
             currentSong = songList.get(0);
         }
@@ -226,9 +225,10 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public void playNextSong(boolean b) {
         position++;
         if (position >= songList.size()) {
-            position = songList.size();
-        } else {
-            position++;
+            position = songList.size() - 1;
+            if (position <= -1) {
+                position = 0;
+            }
         }
         playMedia(position);
     }
@@ -247,6 +247,7 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     public void setSongs(List<Song> songs) {
         songList = songs;
+        songListOriginal = new ArrayList<>(songList);
     }
 
     private void playMedia(int index) {

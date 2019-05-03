@@ -1,14 +1,16 @@
 package com.mashazavolnyuk.musicwavejava.adpater;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.albums.AlbumDetail;
 import com.mashazavolnyuk.musicwavejava.data.Album;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
 import com.squareup.picasso.Picasso;
@@ -17,25 +19,22 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumHolder>  {
+public class AlbumsAdapter extends MusicAdapter<AlbumsAdapter.AlbumHolder> {
 
     private List<Album> albumList;
+    private Activity activity;
 
-    public AlbumsAdapter(List<Album> albumList){
+    public AlbumsAdapter(@NonNull List<Album> albumList, Activity activity, int layout) {
+        super(layout);
         this.albumList = albumList;
-    }
-
-    @NonNull
-    @Override
-    public AlbumHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_album, parent, false);
-        return new AlbumsAdapter.AlbumHolder(itemView);
+        size = albumList.size();
+        this.activity = activity;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AlbumHolder holder, int position) {
         holder.albumName.setText(albumList.get(position).getTitle());
+        holder.linearLayout.setOnClickListener(view -> showDetail(albumList.get(position)));
         Uri uri = MusicUtil.getMediaStoreAlbumCoverUri(albumList.get(position).getId());
         Picasso.get()
                 .load(uri)
@@ -46,20 +45,29 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumHolde
                 .into(holder.imageViewCover);
     }
 
-    @Override
-    public int getItemCount() {
-        return albumList.size();
+
+    private void showDetail(Album album) {
+        Intent intent = new Intent(activity, AlbumDetail.class);
+        intent.putExtra(AlbumDetail.EXTRA_ALBUM_ID, album);
+        activity.startActivity(intent);
     }
 
-    public class AlbumHolder extends RecyclerView.ViewHolder {
+    @Override
+    protected AlbumsAdapter.AlbumHolder createViewHolder(View view) {
+        return new AlbumsAdapter.AlbumHolder(view);
+    }
+
+    class AlbumHolder extends RecyclerView.ViewHolder {
 
         TextView albumName;
         CircleImageView imageViewCover;
+        LinearLayout linearLayout;
 
-        public AlbumHolder(View itemView) {
+        AlbumHolder(View itemView) {
             super(itemView);
             albumName = itemView.findViewById(R.id.nameAlbum);
             imageViewCover = itemView.findViewById(R.id.coverAlbum);
+            linearLayout = itemView.findViewById(R.id.album_parent);
 
         }
     }

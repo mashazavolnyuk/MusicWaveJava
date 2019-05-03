@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SongLoader {
 
@@ -53,6 +54,7 @@ public class SongLoader {
             } while (cursor.moveToNext());
             cursor.close();
         }
+        Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
         return songList;
     }
 }
