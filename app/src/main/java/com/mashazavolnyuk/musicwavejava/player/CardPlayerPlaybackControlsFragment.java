@@ -2,7 +2,6 @@ package com.mashazavolnyuk.musicwavejava.player;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,8 @@ import com.mashazavolnyuk.musicwavejava.musicService.MusicService;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
 import com.mashazavolnyuk.musicwavejava.view.PlayPauseDrawable;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -35,9 +36,9 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     @BindView(R.id.player_next_button)
     ImageButton nextButton;
     @BindView(R.id.player_repeat_button)
-    AppCompatButton repeatButton;
+    ImageButton repeatButton;
     @BindView(R.id.player_shuffle_button)
-    AppCompatButton shuffleButton;
+    ImageButton shuffleButton;
 
     @BindView(R.id.player_progress_slider)
     SeekBar progressSlider;
@@ -110,16 +111,9 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
 
 
     private void setUpPlayPauseFab() {
-
-        playerFabPlayPauseDrawable = new PlayPauseDrawable(getActivity());
+        playerFabPlayPauseDrawable = new PlayPauseDrawable(Objects.requireNonNull(getActivity()));
         playPauseFab.setImageDrawable(playerFabPlayPauseDrawable);
         playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
-        playPauseFab.post(() -> {
-            if (playPauseFab != null) {
-                playPauseFab.setPivotX(playPauseFab.getWidth() / 2);
-                playPauseFab.setPivotY(playPauseFab.getHeight() / 2);
-            }
-        });
     }
 
     protected void updatePlayPauseDrawableState(boolean animate) {
@@ -150,10 +144,10 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     private void updateShuffleState() {
         switch (MusicPlayerRemote.getShuffleMode()) {
             case MusicService.SHUFFLE_MODE_SHUFFLE:
-                shuffleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_shuffle, getActivity().getTheme()));
+                shuffleButton.setImageResource(R.drawable.ic_shuffle);
                 break;
             case MusicService.SHUFFLE_MODE_NONE:
-                shuffleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_shuffle_none, getActivity().getTheme()));
+                shuffleButton.setImageResource(R.drawable.ic_shuffle_none);
                 break;
         }
     }
@@ -165,13 +159,13 @@ public class CardPlayerPlaybackControlsFragment extends MusicServiceFragment imp
     private void updateRepeatState() {
         switch (MusicPlayerRemote.getRepeatMode()) {
             case MusicService.REPEAT_MODE_NONE:
-                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeat_none, getActivity().getTheme()));
+                repeatButton.setImageResource(R.drawable.ic_repeat_none);
                 break;
             case MusicService.REPEAT_MODE_ALL:
-                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeat, getActivity().getTheme()));
+                repeatButton.setImageResource(R.drawable.ic_repeat);
                 break;
             case MusicService.REPEAT_MODE_THIS:
-                repeatButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_repeate_once, getActivity().getTheme()));
+                repeatButton.setImageResource(R.drawable.ic_repeate_once);
                 break;
         }
     }

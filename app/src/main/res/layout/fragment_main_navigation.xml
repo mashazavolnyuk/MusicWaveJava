@@ -38,6 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             app:tabContentStart="72dp"
+            app:tabTextColor="@color/colorAccent"
+            app:tabSelectedTextColor="@color/colorPrimaryDark"
+            app:tabRippleColor="@color/colorAccent"
             app:tabMode="scrollable" />
 
     </android.support.design.widget.AppBarLayout>

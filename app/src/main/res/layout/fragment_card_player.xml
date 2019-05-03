@@ -5,59 +5,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingEnd="@dimen/minimum_margin_between_elements"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/minimum_margin_between_elements"
     android:paddingStart="@dimen/minimum_margin_between_elements"
-    android:orientation="vertical">
+    android:paddingEnd="@dimen/minimum_margin_between_elements">
 
-        <LinearLayout
-            android:id="@+id/layoutCover"
-            android:orientation="vertical"
+    <RelativeLayout
+        android:id="@+id/layoutCover"
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_rectangle"
+       >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/coverAnimation"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_centerInParent="true"
+            app:civ_border_width="1dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cover"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            app:civ_border_color="#FFFFFFFF"
+            app:civ_border_width="1dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/songInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutCover"
+        android:layout_marginTop="-10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/artistName"
             android:layout_width="match_parent"
-            android:layout_height="270dp">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:text="text"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/size_big_title_text"
+            android:textStyle="normal" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/cover"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_marginTop="10dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FFFFFFFF"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/songInfo"
-                android:layout_below="@+id/layoutCover"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/artistName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="text"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorAccent"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/size_big_title_text" />
-
-                <TextView
-                    android:id="@+id/songTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="text"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorTitle"
-                    android:textStyle="italic"
-                    android:textSize="@dimen/size_title_text" />
-            </LinearLayout>
+        <TextView
+            android:id="@+id/songTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="text"
+            android:textAlignment="center"
+            android:textColor="@color/colorTitle"
+            android:textSize="@dimen/size_title_text"
+            android:textStyle="italic" />
+    </LinearLayout>
 
 
     <fragment
