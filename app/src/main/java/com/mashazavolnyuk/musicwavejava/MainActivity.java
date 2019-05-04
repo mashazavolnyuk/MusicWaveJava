@@ -51,7 +51,7 @@ public class MainActivity extends SlidingMusicPanelActivity {
     }
 
     private void backStackFragments(){
-        if (fragmentManager.getBackStackEntryCount() == 0) {
+        if (fragmentManager==null || fragmentManager.getBackStackEntryCount() == 0) {
             finish();
         }
     }
