@@ -18,6 +18,7 @@ import com.mashazavolnyuk.musicwavejava.songList.SongsListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +40,9 @@ public class MainFragmentNavigation extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_navigation, container, false);
         unbinder = ButterKnife.bind(this, view);
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
+        getActivity().setTitle("Music wave");
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -47,6 +51,7 @@ public class MainFragmentNavigation extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override

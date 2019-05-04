@@ -88,6 +88,11 @@ public class Player implements Playback, MediaPlayer.OnCompletionListener {
     }
 
     @Override
+    public int getAudioSessionId() {
+        return mediaPlayer.getAudioSessionId();
+    }
+
+    @Override
     public void onCompletion(MediaPlayer mp) {
         if (dataPath!= null && callbacks != null) {
             callbacks.onTrackEnded();

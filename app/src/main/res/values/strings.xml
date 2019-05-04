@@ -24,5 +24,8 @@
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="app_shortcut_shuffle_all_short">Shuffle</string>
     <string name="search_hint">search</string>
+    <string name="no_audio_ID">please, play song before</string>
+    <string name="no_equalizer">Can\'t found equalizer</string>
+    <string name="equalizer">equalizer</string>
 
 </resources>

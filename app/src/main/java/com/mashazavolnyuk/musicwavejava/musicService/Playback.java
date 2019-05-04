@@ -24,6 +24,8 @@ public interface Playback {
 
     void setCallbacks(PlaybackCallbacks  callbacks);
 
+    int getAudioSessionId();
+
     interface PlaybackCallbacks {
 
         void onTrackEnded();

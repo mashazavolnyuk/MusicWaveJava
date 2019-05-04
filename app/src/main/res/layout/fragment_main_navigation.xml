@@ -22,14 +22,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
+                app:titleTextColor="@color/white"
                 tools:ignore="UnusedAttribute">
-
             </android.support.v7.widget.Toolbar>
 
-            <ViewStub
-                android:id="@+id/cab_stub"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize" />
 
         </FrameLayout>
 

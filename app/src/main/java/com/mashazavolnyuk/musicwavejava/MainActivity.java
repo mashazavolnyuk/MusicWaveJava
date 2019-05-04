@@ -35,6 +35,8 @@ public class MainActivity extends SlidingMusicPanelActivity {
         fragmentManager.beginTransaction().replace(R.id.content, fragmentNavigation).commit();
     }
 
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

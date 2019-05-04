@@ -89,6 +89,10 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
         return musicBind;
     }
 
+    public int getAudioSessionId() {
+        return playback.getAudioSessionId();
+    }
+
     public class MusicBinder extends Binder {
         @NonNull
         public MusicService getService() {
