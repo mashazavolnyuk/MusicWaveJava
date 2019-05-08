@@ -119,6 +119,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         public ViewHolder(@NonNull View itemView, int itemViewType) {
             super(itemView);
+            titleSongText = itemView.findViewById(R.id.song_title);
+            artistSongText = itemView.findViewById(R.id.song_artist);
+            imageViewCover = itemView.findViewById(R.id.coverSong);
+            relativeLayout = itemView.findViewById(R.id.parent_item_music);
 
         }
     }
