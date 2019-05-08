@@ -57,4 +57,33 @@ public class SongLoader {
         Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
         return songList;
     }
+
+    //method to retrieve item_song info from device
+    public static ArrayList<Song> getSongList(@NonNull Context context, @NonNull String query) {
+        ArrayList<Song> songList = new ArrayList<>();
+        //query external audio
+        ContentResolver musicResolver = context.getContentResolver();
+        Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = musicResolver.query(musicUri, BASE_PROJECTION, MediaStore.Audio.AudioColumns.TITLE + " LIKE ?", new String[]{"%" + query + "%"},null);
+        //iterate over results if valid
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                final int id = cursor.getInt(0);
+                final String title = cursor.getString(1);
+                final int trackNumber = cursor.getInt(2);
+                final int year = cursor.getInt(3);
+                final long duration = cursor.getLong(4);
+                final String data = cursor.getString(5);
+                final long dateModified = cursor.getLong(6);
+                final int albumId = cursor.getInt(7);
+                final String albumName = cursor.getString(8);
+                final int artistId = cursor.getInt(9);
+                final String artistName = cursor.getString(10);
+                songList.add(new Song(id, title, trackNumber, year, duration, data, dateModified, albumId, albumName, artistId, artistName));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
+        return songList;
+    }
 }

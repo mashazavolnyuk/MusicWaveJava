@@ -14,9 +14,9 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@drawable/ic_music_circle"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_music_circle"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -36,6 +36,9 @@
         <activity
             android:name=".albums.AlbumDetail"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".search.SearchResultsActivity"
+            android:theme="@style/AppTheme"
+            />
 
         <service android:name=".musicService.MusicService"
             />

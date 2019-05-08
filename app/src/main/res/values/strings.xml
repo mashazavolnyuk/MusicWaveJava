@@ -27,5 +27,7 @@
     <string name="no_audio_ID">please, play song before</string>
     <string name="no_equalizer">Can\'t found equalizer</string>
     <string name="equalizer">equalizer</string>
+    <string name="no_results">no results</string>
+    <string name="action_search">serach</string>
 
 </resources>
