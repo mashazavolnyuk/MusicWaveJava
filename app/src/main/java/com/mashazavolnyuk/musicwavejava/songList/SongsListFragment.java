@@ -1,6 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.songList;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.mashazavolnyuk.musicwavejava.AbsPlayerFragment;
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.search.SearchResultsActivity;
 import com.mashazavolnyuk.musicwavejava.adpater.SongsAdapter;
 import com.mashazavolnyuk.musicwavejava.helper.NavigationHelper;
 
@@ -37,11 +40,11 @@ public class SongsListFragment extends AbsPlayerFragment {
         SongListViewModel model = ViewModelProviders.of(this).get(SongListViewModel.class);
         model.getSongs(Objects.requireNonNull(getActivity()).
                 getApplication()).observe(this, songs -> {
-                    if (songs != null) {
-                        recyclerViewSongs.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        recyclerViewSongs.setAdapter(new SongsAdapter(songs,R.layout.item_song));
-                    }
-                });
+            if (songs != null) {
+                recyclerViewSongs.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerViewSongs.setAdapter(new SongsAdapter(songs, R.layout.item_song));
+            }
+        });
     }
 
     @Override
@@ -55,13 +58,20 @@ public class SongsListFragment extends AbsPlayerFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.equalizer:
-                NavigationHelper.openEqualizer(getActivity());
+                NavigationHelper.openEqualizer(Objects.requireNonNull(getActivity()));
                 return true;
-
+            case R.id.search:
+                startSearch();
+                return true;
             default:
                 break;
         }
 
         return false;
+    }
+
+    private void startSearch() {
+        Intent intent = new Intent(getActivity(), SearchResultsActivity.class);
+        startActivity(intent);
     }
 }

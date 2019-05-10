@@ -1,5 +1,7 @@
 package com.mashazavolnyuk.musicwavejava.loader;
+
 import android.content.Context;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -12,10 +14,15 @@ import java.util.Collections;
 public class AlbumLoader {
 
     public static ArrayList<Album> getAlbums(@NonNull Context context) {
-        ArrayList<Album> albums = new ArrayList<>();
         ArrayList<Song> songs = SongLoader.getSongList(context);
         return splitIntoAlbums(songs);
     }
+
+    public static ArrayList<Album> getAlbums(@NonNull Context context, String selection, String query) {
+        ArrayList<Song> songs = SongLoader.getSongList(context, selection, query);
+        return splitIntoAlbums(songs);
+    }
+
 
     @NonNull
     private static ArrayList<Album> splitIntoAlbums(@Nullable final ArrayList<Song> songs) {
