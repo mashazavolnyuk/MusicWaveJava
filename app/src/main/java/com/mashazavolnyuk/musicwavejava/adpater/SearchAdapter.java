@@ -1,5 +1,6 @@
 package com.mashazavolnyuk.musicwavejava.adpater;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,40 +13,42 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.albums.AlbumDetail;
+import com.mashazavolnyuk.musicwavejava.data.Album;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private static final int HEADER = 0;
     private static final int ALBUM = 1;
-    private static final int ARTIST = 2;
     private static final int SONG = 3;
 
     private final AppCompatActivity activity;
 
-    private List<Song> dataSet;
+    private List<Object> dataSet;
 
-    public SearchAdapter(@NonNull AppCompatActivity activity, @NonNull List<Song> dataSet) {
+    public SearchAdapter(@NonNull AppCompatActivity activity, @NonNull List<Object> dataSet) {
         this.activity = activity;
         this.dataSet = dataSet;
     }
 
-    public void swapDataSet(@NonNull List<Song> dataSet) {
+    public void swapDataSet(@NonNull List<Object> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if (dataSet.get(position) instanceof Album) return ALBUM;
-//        if (dataSet.get(position) instanceof Artist) return ARTIST;
         if (dataSet.get(position) != null && dataSet.get(position) instanceof Song) {
             return SONG;
         }
+        if (dataSet.get(position) instanceof Album) return ALBUM;
         return HEADER;
     }
 
@@ -62,68 +65,86 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case SONG:
-            holder.titleSongText.setText(dataSet.get(position).getTitle());
-            holder.artistSongText.setText(dataSet.get(position).getArtistName());
-            holder.relativeLayout.setOnClickListener(view -> playMusic(dataSet, position));
-            Uri uri = MusicUtil.getMediaStoreAlbumCoverUri(dataSet.get(position).albumId);
-            Picasso.get()
-                    .load(uri)
-                    .placeholder(R.drawable.ic_music_note)
-                    .error(R.drawable.ic_music_note)
-                    .fit()
-                    .centerInside()
-                    .into(holder.imageViewCover);
-            break;
-//            case ALBUM:
-//                final Album album = (Album) dataSet.get(position);
-//                holder.title.setText(album.getTitle());
-//                holder.text.setText(MusicUtil.getAlbumInfoString(activity, album));
-//                SongGlideRequest.Builder.from(Glide.with(activity), album.safeGetFirstSong())
-//                        .checkIgnoreMediaStore(activity).build()
-//                        .into(holder.image);
-//                break;
-//            case ARTIST:
-//                final Artist artist = (Artist) dataSet.get(position);
-//                holder.title.setText(artist.getName());
-//                holder.text.setText(MusicUtil.getArtistInfoString(activity, artist));
-//                ArtistGlideRequest.Builder.from(Glide.with(activity), artist)
-//                        .build().into(holder.image);
-//                break;
-//            case SONG:
-//                final Song song = (Song) dataSet.get(position);
-//                holder.title.setText(song.title);
-//                holder.text.setText(MusicUtil.getSongInfoString(song));
-//                break;
-//            default:
-//                holder.title.setText(dataSet.get(position).toString());
-//                break;
+                holder.titleSongText.setText(((Song) dataSet.get(position)).getTitle());
+                holder.artistSongText.setText(((Song) dataSet.get(position)).getArtistName());
+                Uri uri = MusicUtil.getMediaStoreAlbumCoverUri(((Song) dataSet.get(position)).albumId);
+                Picasso.get()
+                        .load(uri)
+                        .placeholder(R.drawable.ic_music_note)
+                        .error(R.drawable.ic_music_note)
+                        .fit()
+                        .centerInside()
+                        .into(holder.imageViewCover);
+                break;
+            case ALBUM:
+                holder.titleSongText.setText(((Album) dataSet.get(position)).getTitle());
+                holder.artistSongText.setText(((Album) dataSet.get(position)).getArtistName());
+                uri = MusicUtil.getMediaStoreAlbumCoverUri(((Album) dataSet.get(position)).getId());
+                Picasso.get()
+                        .load(uri)
+                        .placeholder(R.drawable.ic_music_note)
+                        .error(R.drawable.ic_music_note)
+                        .fit()
+                        .centerInside()
+                        .into(holder.imageViewCover);
+                break;
         }
     }
 
-    void playMusic(List<Song> songs, int startPosition) {
-        MusicPlayerRemote.setSongs(songs);
-        MusicPlayerRemote.playSongAt(startPosition);
-    }
 
     @Override
     public int getItemCount() {
         return dataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView titleSongText;
         TextView artistSongText;
         ImageView imageViewCover;
         RelativeLayout relativeLayout;
 
-        public ViewHolder(@NonNull View itemView, int itemViewType) {
+        ViewHolder(@NonNull View itemView, int itemType) {
             super(itemView);
-            titleSongText = itemView.findViewById(R.id.song_title);
-            artistSongText = itemView.findViewById(R.id.song_artist);
-            imageViewCover = itemView.findViewById(R.id.coverSong);
-            relativeLayout = itemView.findViewById(R.id.parent_item_music);
+            itemView.setOnClickListener(this);
+            switch (itemType) {
+                case SONG:
+                    titleSongText = itemView.findViewById(R.id.song_title);
+                    artistSongText = itemView.findViewById(R.id.song_artist);
+                    imageViewCover = itemView.findViewById(R.id.coverSong);
+                    relativeLayout = itemView.findViewById(R.id.parent_item_music);
+                    break;
+                case ALBUM:
+                    titleSongText = itemView.findViewById(R.id.song_title);
+                    artistSongText = itemView.findViewById(R.id.song_artist);
+                    imageViewCover = itemView.findViewById(R.id.coverSong);
+                    relativeLayout = itemView.findViewById(R.id.parent_item_music);
+                    break;
+                default:
 
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            Object item = dataSet.get(getAdapterPosition());
+            switch (getItemViewType()) {
+                case ALBUM:
+                    Intent intent = new Intent(activity, AlbumDetail.class);
+                    intent.putExtra(AlbumDetail.EXTRA_ALBUM_ID, (Album) item);
+                    activity.startActivity(intent);
+                    break;
+                case SONG:
+                    ArrayList<Song> playList = new ArrayList<>();
+                    playList.add((Song) item);
+                    playMusic(playList);
+                    break;
+            }
+        }
+
+        void playMusic(List<Song> songs) {
+            MusicPlayerRemote.setSongs(songs);
+            MusicPlayerRemote.playSongAt(0);
         }
     }
 }

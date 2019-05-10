@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mashazavolnyuk.musicwavejava.data.Song;
 
@@ -15,7 +16,7 @@ import java.util.Collections;
 
 public class SongLoader {
 
-    private static final String[] BASE_PROJECTION = new String[]{
+    private static final String[] BASE_SELECTION = new String[]{
             BaseColumns._ID,// 0
             MediaStore.Audio.AudioColumns.TITLE,// 1
             MediaStore.Audio.AudioColumns.TRACK,// 2
@@ -35,7 +36,7 @@ public class SongLoader {
         //query external audio
         ContentResolver musicResolver = context.getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = musicResolver.query(musicUri, BASE_PROJECTION, null, null, null);
+        Cursor cursor = musicResolver.query(musicUri, BASE_SELECTION, null, null, null);
         //iterate over results if valid
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -59,12 +60,12 @@ public class SongLoader {
     }
 
     //method to retrieve item_song info from device
-    public static ArrayList<Song> getSongList(@NonNull Context context, @NonNull String query) {
+    public static ArrayList<Song> getSongList(@NonNull Context context, String selection, @NonNull String query) {
         ArrayList<Song> songList = new ArrayList<>();
         //query external audio
         ContentResolver musicResolver = context.getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = musicResolver.query(musicUri, BASE_PROJECTION, MediaStore.Audio.AudioColumns.TITLE + " LIKE ?", new String[]{"%" + query + "%"},null);
+        Cursor cursor = makeSongCursor(context, selection + " LIKE ?", new String[]{"%" + query + "%"}, null);
         //iterate over results if valid
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -85,5 +86,15 @@ public class SongLoader {
         }
         Collections.sort(songList, (a, b) -> a.getTitle().compareTo(b.getTitle()));
         return songList;
+    }
+
+    @Nullable
+    private static Cursor makeSongCursor(@NonNull final Context context, @Nullable String selection, String[] selectionValues, final String sortOrder) {
+        try {
+            return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    BASE_SELECTION, selection, selectionValues, sortOrder);
+        } catch (SecurityException e) {
+            return null;
+        }
     }
 }

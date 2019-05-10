@@ -2,7 +2,6 @@ package com.mashazavolnyuk.musicwavejava.search;
 
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,18 +17,15 @@ import android.widget.TextView;
 import com.mashazavolnyuk.musicwavejava.MusicServiceActivity;
 import com.mashazavolnyuk.musicwavejava.R;
 import com.mashazavolnyuk.musicwavejava.adpater.SearchAdapter;
-import com.mashazavolnyuk.musicwavejava.data.Song;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchResultsActivity extends MusicServiceActivity implements SearchView.OnQueryTextListener, LifecycleOwner {
-
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -115,7 +111,7 @@ public class SearchResultsActivity extends MusicServiceActivity implements Searc
     @Override
     public boolean onQueryTextChange(String s) {
         if (s == null || s.isEmpty()) {
-            adapter.swapDataSet(new ArrayList<Song>());
+            adapter.swapDataSet(new ArrayList<>());
         } else {
             search(s);
         }
@@ -134,11 +130,8 @@ public class SearchResultsActivity extends MusicServiceActivity implements Searc
     }
 
     private void search(String query) {
-        searchDataViewModel.loadSongs(query).observe(this, new Observer<List<Song>>() {
-            @Override
-            public void onChanged(@Nullable List<Song> songs) {
-                adapter.swapDataSet(songs);
-            }
+        searchDataViewModel.loadSongs(query).observe(this, songs -> {
+            adapter.swapDataSet(Objects.requireNonNull(songs));
         });
     }
 }
