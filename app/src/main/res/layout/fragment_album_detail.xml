@@ -1,13 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cover"
+        android:layout_width="@dimen/big_size_cover"
+        android:layout_height="@dimen/big_size_cover"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="@dimen/minimum_border_circle" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:maxLines="1"
+        android:text="@string/unknown"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/size_big_title_text"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/minimum_margin_between_elements"
+        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:layout_marginBottom="@dimen/minimum_margin_between_elements"
+        android:maxLines="1"
+        android:text="@string/unknown"
+        android:textAlignment="center"
+        android:textColor="@color/colorTitle"
+        android:textSize="@dimen/size_title_text"
+        android:textStyle="italic" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/song_list"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        android:padding="@dimen/minimum_margin_between_elements"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 </LinearLayout>

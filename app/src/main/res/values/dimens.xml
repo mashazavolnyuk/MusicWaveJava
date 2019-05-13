@@ -12,6 +12,7 @@
     <dimen name="mini_player_height">56dp</dimen>
 
     <dimen name="mini_size_cover">55dp</dimen>
+    <dimen name="big_size_cover">220dp</dimen>
 
     <dimen name="pause_bar_width">5dp</dimen>
     <dimen name="pause_bar_distance">4dp</dimen>
