@@ -37,14 +37,13 @@
     <style name="textTitleBig" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/size_title_text</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:layout_margin">@dimen/minimum_margin_between_elements</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="textTitleNormal" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/size_simple_text</item>
-        <item name="android:layout_margin">@dimen/minimum_margin_between_elements</item>
-        <item name="android:textStyle">italic</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="widgetButton">

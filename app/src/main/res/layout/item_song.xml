@@ -1,18 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="@dimen/minimum_margin_between_elements"
     android:id="@+id/parent_item_music"
+    android:layout_marginBottom="@dimen/minimum_margin_between_elements"
     android:layout_marginTop="@dimen/minimum_margin_between_elements">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/coverSong"
         android:layout_width="@dimen/mini_size_cover"
         android:layout_height="@dimen/mini_size_cover"
-        app:civ_border_width="@dimen/minimum_border_circle"
-        app:civ_border_color="#FFFFFFFF"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
@@ -26,7 +23,7 @@
         style="@style/textTitleBig"
         android:layout_toEndOf="@id/coverSong"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
-        android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+        android:layout_marginBottom="@dimen/minimum_margin_between_elements"
         />
 
     <TextView

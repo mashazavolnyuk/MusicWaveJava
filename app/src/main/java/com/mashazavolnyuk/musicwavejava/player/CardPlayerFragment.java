@@ -85,15 +85,6 @@ public class CardPlayerFragment extends AbsPlayerFragment {
         updateCurrentSong();
     }
 
-    @Override
-    public void onQueueChanged() {
-
-    }
-
-    @Override
-    public void onMediaStoreChanged() {
-
-    }
 
     private void updateCurrentSong() {
         Song song = MusicPlayerRemote.getCurrentSong();

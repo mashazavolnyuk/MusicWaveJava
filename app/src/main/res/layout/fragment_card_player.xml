@@ -6,17 +6,24 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingTop="@dimen/minimum_margin_between_elements"
     android:paddingStart="@dimen/minimum_margin_between_elements"
+    android:paddingTop="@dimen/minimum_margin_between_elements"
     android:paddingEnd="@dimen/minimum_margin_between_elements">
+
+    <ImageView
+        android:id="@+id/rollUp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_roll_up" />
 
     <RelativeLayout
         android:id="@+id/layoutCover"
-        android:layout_width="270dp"
-        android:layout_height="270dp"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_below="@+id/rollUp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/round_rectangle"
-       >
+        android:background="@drawable/round_rectangle">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/coverAnimation"
@@ -50,6 +57,7 @@
             android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:maxLines="1"
             android:text="@string/unknown"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
@@ -62,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_marginEnd="@dimen/minimum_margin_between_elements"
+            android:maxLines="1"
             android:text="@string/unknown"
             android:textAlignment="center"
             android:textColor="@color/colorTitle"

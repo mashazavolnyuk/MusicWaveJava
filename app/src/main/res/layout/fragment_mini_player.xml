@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mini_player_height"
-    android:layout_marginStart="@dimen/minimum_margin_between_elements"
-    android:layout_marginEnd="@dimen/minimum_margin_between_elements"
     android:background="@android:color/white"
     android:focusable="false"
     android:transitionName="@string/transition_mini_player"
@@ -18,10 +16,10 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/mini_player_image"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center_vertical"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_expand_less_white_24dp"
             android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_marginEnd="@dimen/minimum_margin_between_elements"
@@ -30,15 +28,13 @@
         <TextView
             android:id="@+id/mini_player_title"
             android:layout_width="0dp"
-            android:text="text"
-            android:textSize="@dimen/size_simple_text"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/minimum_margin_between_elements"
             android:layout_marginStart="@dimen/minimum_margin_between_elements"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            style="@style/textTitleNormal"
+            />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/mini_player_play_pause_button"

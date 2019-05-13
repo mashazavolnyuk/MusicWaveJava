@@ -93,7 +93,6 @@ public class MiniPlayerFragment extends MusicServiceFragment implements MusicPro
         updatePlayPauseDrawableState(true);
     }
 
-
     private void setUpPlayPauseButton() {
         playPauseDrawable = new PlayPauseDrawable(Objects.requireNonNull(getActivity()));
         playPauseDrawable.setColor(Color.GRAY);

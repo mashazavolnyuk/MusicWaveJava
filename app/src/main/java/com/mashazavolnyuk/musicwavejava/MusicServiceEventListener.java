@@ -6,8 +6,6 @@ public interface MusicServiceEventListener {
 
     void onServiceDisconnected();
 
-    void onQueueChanged();
-
     void onPlayingMetaChanged();
 
     void onPlayStateChanged();
@@ -16,5 +14,4 @@ public interface MusicServiceEventListener {
 
     void onShuffleModeChanged();
 
-    void onMediaStoreChanged();
 }

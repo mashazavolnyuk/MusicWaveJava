@@ -51,10 +51,6 @@ public abstract class MusicServiceFragment extends Fragment implements MusicServ
     }
 
     @Override
-    public void onQueueChanged() {
-    }
-
-    @Override
     public void onPlayStateChanged() {
     }
 
@@ -65,10 +61,5 @@ public abstract class MusicServiceFragment extends Fragment implements MusicServ
     @Override
     public void onShuffleModeChanged() {
     }
-
-    @Override
-    public void onMediaStoreChanged() {
-    }
-
 
 }

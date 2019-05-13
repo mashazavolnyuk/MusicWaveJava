@@ -167,8 +167,6 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
             filter.addAction(MusicService.SHUFFLE_MODE_CHANGED);
             filter.addAction(MusicService.REPEAT_MODE_CHANGED);
             filter.addAction(MusicService.META_CHANGED);
-            filter.addAction(MusicService.QUEUE_CHANGED);
-            filter.addAction(MusicService.MEDIA_STORE_CHANGED);
             registerReceiver(musicStateReceiver, filter);
             receiverRegistered = true;
         }
@@ -204,28 +202,10 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
     }
 
     @Override
-    public void onQueueChanged() {
-        for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onQueueChanged();
-            }
-        }
-    }
-
-    @Override
     public void onPlayStateChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
             if (listener != null) {
                 listener.onPlayStateChanged();
-            }
-        }
-    }
-
-    @Override
-    public void onMediaStoreChanged() {
-        for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onMediaStoreChanged();
             }
         }
     }
@@ -266,9 +246,6 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
                         case MusicService.META_CHANGED:
                             activity.onPlayingMetaChanged();
                             break;
-                        case MusicService.QUEUE_CHANGED:
-                            activity.onQueueChanged();
-                            break;
                         case MusicService.PLAY_STATE_CHANGED:
                             activity.onPlayStateChanged();
                             break;
@@ -277,9 +254,6 @@ public abstract class MusicServiceActivity extends AppCompatActivity implements 
                             break;
                         case MusicService.SHUFFLE_MODE_CHANGED:
                             activity.onShuffleModeChanged();
-                            break;
-                        case MusicService.MEDIA_STORE_CHANGED:
-                            activity.onMediaStoreChanged();
                             break;
                     }
                 }

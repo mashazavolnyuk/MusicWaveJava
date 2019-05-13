@@ -83,12 +83,6 @@ public abstract class SlidingMusicPanelActivity extends MusicServiceActivity imp
     }
 
     @Override
-    public void onQueueChanged() {
-        super.onQueueChanged();
-        hideBottomBar(MusicPlayerRemote.getPlayingQueue().isEmpty());
-    }
-
-    @Override
     public void onPanelSlide(View panel, @FloatRange(from = 0, to = 1) float slideOffset) {
         setMiniPlayerAlphaProgress(slideOffset);
     }
