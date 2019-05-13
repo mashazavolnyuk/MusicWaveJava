@@ -8,8 +8,7 @@
         android:id="@+id/rValbums"
         android:padding="@dimen/minimum_margin_between_elements"
         android:background="@color/white"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
-        app:spanCount="2"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

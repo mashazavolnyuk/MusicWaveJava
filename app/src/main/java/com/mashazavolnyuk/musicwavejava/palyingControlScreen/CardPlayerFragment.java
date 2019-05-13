@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava.player;
+package com.mashazavolnyuk.musicwavejava.palyingControlScreen;
 
 import android.animation.ArgbEvaluator;
 import android.animation.TimeAnimator;

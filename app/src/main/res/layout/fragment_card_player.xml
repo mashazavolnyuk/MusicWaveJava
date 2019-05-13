@@ -81,7 +81,7 @@
 
     <fragment
         android:id="@+id/playback_controls_fragment"
-        class="com.mashazavolnyuk.musicwavejava.player.CardPlayerPlaybackControlsFragment"
+        class="com.mashazavolnyuk.musicwavejava.palyingControlScreen.CardPlayerPlaybackControlsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/songInfo" />

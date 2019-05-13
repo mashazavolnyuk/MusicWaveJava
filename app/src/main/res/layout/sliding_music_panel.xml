@@ -27,7 +27,7 @@
 
         <fragment
             android:id="@+id/mini_player_fragment"
-            class="com.mashazavolnyuk.musicwavejava.player.MiniPlayerFragment"
+            class="com.mashazavolnyuk.musicwavejava.palyingControlScreen.MiniPlayerFragment"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mini_player_height" />
 

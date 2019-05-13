@@ -47,7 +47,7 @@ public class FragmentAlbums extends AbsPlayerFragment {
         model.getAlbums(Objects.requireNonNull(getActivity()).
                 getApplication()).observe(this, albums -> {
             if (albums != null) {
-                recyclerViewSongs.setAdapter(new AlbumsAdapter(albums, getActivity(), R.layout.item_album));
+                recyclerViewSongs.setAdapter(new AlbumsAdapter(albums, getActivity(), R.layout.item_song));
             }
         });
     }

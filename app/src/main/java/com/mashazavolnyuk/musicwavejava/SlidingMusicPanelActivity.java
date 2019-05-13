@@ -11,8 +11,8 @@ import android.view.ViewTreeObserver;
 
 
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
-import com.mashazavolnyuk.musicwavejava.player.CardPlayerFragment;
-import com.mashazavolnyuk.musicwavejava.player.MiniPlayerFragment;
+import com.mashazavolnyuk.musicwavejava.palyingControlScreen.CardPlayerFragment;
+import com.mashazavolnyuk.musicwavejava.palyingControlScreen.MiniPlayerFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;

@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/minimum_margin_between_elements">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/coverSong"
+        android:id="@+id/cover"
         android:layout_width="@dimen/mini_size_cover"
         android:layout_height="@dimen/mini_size_cover"
         android:layout_alignParentStart="true"
@@ -17,22 +17,22 @@
         android:contentDescription="@string/cover" />
 
     <TextView
-        android:id="@+id/song_title"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/textTitleBig"
-        android:layout_toEndOf="@id/coverSong"
+        android:layout_toEndOf="@id/cover"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
         android:layout_marginBottom="@dimen/minimum_margin_between_elements"
         />
 
     <TextView
-        android:id="@+id/song_artist"
+        android:id="@+id/subTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/song_title"
+        android:layout_below="@id/title"
         style="@style/textTitleNormal"
-        android:layout_toEndOf="@id/coverSong"
+        android:layout_toEndOf="@id/cover"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
         android:layout_marginEnd="@dimen/minimum_margin_between_elements"
         />

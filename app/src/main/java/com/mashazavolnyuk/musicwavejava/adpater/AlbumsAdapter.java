@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.R;
@@ -33,8 +33,9 @@ public class AlbumsAdapter extends MusicAdapter<AlbumsAdapter.AlbumHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull AlbumHolder holder, int position) {
-        holder.albumName.setText(albumList.get(position).getTitle());
-        holder.linearLayout.setOnClickListener(view -> showDetail(albumList.get(position)));
+        holder.title.setText(albumList.get(position).getTitle());
+        holder.parentLayout.setOnClickListener(view -> showDetail(albumList.get(position)));
+        holder.subTitle.setText("Tracks" + "(" + albumList.get(position).songs.size() + ")");
         Uri uri = MusicUtil.getMediaStoreAlbumCoverUri(albumList.get(position).getId());
         Picasso.get()
                 .load(uri)
@@ -42,7 +43,7 @@ public class AlbumsAdapter extends MusicAdapter<AlbumsAdapter.AlbumHolder> {
                 .error(R.drawable.ic_music_note)
                 .fit()
                 .centerInside()
-                .into(holder.imageViewCover);
+                .into(holder.cover);
     }
 
 
@@ -59,15 +60,17 @@ public class AlbumsAdapter extends MusicAdapter<AlbumsAdapter.AlbumHolder> {
 
     class AlbumHolder extends RecyclerView.ViewHolder {
 
-        TextView albumName;
-        CircleImageView imageViewCover;
-        LinearLayout linearLayout;
+        TextView title;
+        TextView subTitle;
+        CircleImageView cover;
+        RelativeLayout parentLayout;
 
         AlbumHolder(View itemView) {
             super(itemView);
-            albumName = itemView.findViewById(R.id.nameAlbum);
-            imageViewCover = itemView.findViewById(R.id.coverAlbum);
-            linearLayout = itemView.findViewById(R.id.album_parent);
+            title = itemView.findViewById(R.id.title);
+            subTitle = itemView.findViewById(R.id.subTitle);
+            cover = itemView.findViewById(R.id.cover);
+            parentLayout = itemView.findViewById(R.id.parent_item_music);
 
         }
     }

@@ -1,4 +1,4 @@
-package com.mashazavolnyuk.musicwavejava.player;
+package com.mashazavolnyuk.musicwavejava.palyingControlScreen;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

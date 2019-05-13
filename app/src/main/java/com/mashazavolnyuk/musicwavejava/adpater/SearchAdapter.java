@@ -113,15 +113,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             itemView.setOnClickListener(this);
             switch (itemType) {
                 case SONG:
-                    titleSongText = itemView.findViewById(R.id.song_title);
-                    artistSongText = itemView.findViewById(R.id.song_artist);
-                    imageViewCover = itemView.findViewById(R.id.coverSong);
+                    titleSongText = itemView.findViewById(R.id.title);
+                    artistSongText = itemView.findViewById(R.id.subTitle);
+                    imageViewCover = itemView.findViewById(R.id.cover);
                     relativeLayout = itemView.findViewById(R.id.parent_item_music);
                     break;
                 case ALBUM:
-                    titleSongText = itemView.findViewById(R.id.song_title);
-                    artistSongText = itemView.findViewById(R.id.song_artist);
-                    imageViewCover = itemView.findViewById(R.id.coverSong);
+                    titleSongText = itemView.findViewById(R.id.title);
+                    artistSongText = itemView.findViewById(R.id.subTitle);
+                    imageViewCover = itemView.findViewById(R.id.cover);
                     relativeLayout = itemView.findViewById(R.id.parent_item_music);
                     break;
                 default:

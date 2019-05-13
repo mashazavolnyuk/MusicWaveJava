@@ -53,9 +53,9 @@ public class SongsAdapter extends MusicAdapter<SongsAdapter.SongHolder> {
 
         SongHolder(View itemView) {
             super(itemView);
-            titleSongText = itemView.findViewById(R.id.song_title);
-            artistSongText = itemView.findViewById(R.id.song_artist);
-            imageViewCover = itemView.findViewById(R.id.coverSong);
+            titleSongText = itemView.findViewById(R.id.title);
+            artistSongText = itemView.findViewById(R.id.subTitle);
+            imageViewCover = itemView.findViewById(R.id.cover);
             relativeLayout = itemView.findViewById(R.id.parent_item_music);
         }
 
