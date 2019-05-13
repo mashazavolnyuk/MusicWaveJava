@@ -64,6 +64,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
+            case HEADER:
+                holder.titleHeader.setText(dataSet.get(position).toString());
+                break;
             case SONG:
                 holder.titleSongText.setText(((Song) dataSet.get(position)).getTitle());
                 holder.artistSongText.setText(((Song) dataSet.get(position)).getArtistName());
@@ -101,6 +104,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         TextView titleSongText;
         TextView artistSongText;
+        TextView titleHeader;
         ImageView imageViewCover;
         RelativeLayout relativeLayout;
 
@@ -121,6 +125,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     relativeLayout = itemView.findViewById(R.id.parent_item_music);
                     break;
                 default:
+                    titleHeader = itemView.findViewById(R.id.title);
 
             }
         }
