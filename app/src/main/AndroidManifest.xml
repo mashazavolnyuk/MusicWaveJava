@@ -36,24 +36,32 @@
         <activity
             android:name=".albums.AlbumDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".search.SearchResultsActivity"
-            android:theme="@style/AppTheme"
-            />
 
-        <service android:name=".musicService.MusicService"
-            />
+        <activity
+            android:name=".search.SearchResultsActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:value=".search.SearchResultsActivity"
+                android:resource="@xml/searchable" />
+        </activity>
+        <meta-data android:name="android.app.default_searchable" android:value=".search.SearchResultsActivity"/>
+
+        <service android:name=".musicService.MusicService" />
         <receiver
             android:name=".widget.MusicWidget"
             android:label="Music Wave">
             <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
-                </action>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"></action>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_metadata">
-            </meta-data>
+                android:resource="@xml/widget_metadata"></meta-data>
         </receiver>
     </application>
 

@@ -1,8 +1,11 @@
 package com.mashazavolnyuk.musicwavejava.search;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +38,7 @@ public class SearchResultsActivity extends MusicServiceActivity implements Searc
     SearchView searchView;
     private SearchAdapter adapter;
     SearchDataViewModel searchDataViewModel;
+    SearchManager searchManager;
 
 
     @Override
@@ -53,14 +57,23 @@ public class SearchResultsActivity extends MusicServiceActivity implements Searc
             }
         });
         recyclerView.setAdapter(adapter);
-
         recyclerView.setOnTouchListener((v, event) -> {
             hideSoftKeyboard(SearchResultsActivity.this);
             return false;
         });
+        // Get the SearchView and set the searchable configuration
+         searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchViewModelFactory searchViewModelFactory = new SearchViewModelFactory(getApplication());
         searchDataViewModel = ViewModelProviders.of(this, searchViewModelFactory).get(SearchDataViewModel.class);
 
+    }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            searchView.setQuery(query, false);
+        }
     }
 
     @Override
@@ -76,6 +89,7 @@ public class SearchResultsActivity extends MusicServiceActivity implements Searc
         searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
         searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchItem.expandActionView();
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
