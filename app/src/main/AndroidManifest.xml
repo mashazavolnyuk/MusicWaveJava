@@ -42,6 +42,19 @@
 
         <service android:name=".musicService.MusicService"
             />
+        <receiver
+            android:name=".widget.MusicWidget"
+            android:label="Music Wave">
+            <intent-filter>
+                <action
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
+                </action>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_metadata">
+            </meta-data>
+        </receiver>
     </application>
 
 </manifest>

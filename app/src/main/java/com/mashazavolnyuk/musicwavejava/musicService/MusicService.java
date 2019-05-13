@@ -1,6 +1,9 @@
 package com.mashazavolnyuk.musicwavejava.musicService;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
@@ -9,11 +12,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.ShuffleHelper;
 import com.mashazavolnyuk.musicwavejava.loader.SongLoader;
 import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotification;
 import com.mashazavolnyuk.musicwavejava.musicService.notification.PlayingNotificationImpl24;
+import com.mashazavolnyuk.musicwavejava.widget.MusicWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +74,8 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
     public static final int REPEAT_MODE_NONE = 0;
     public static final int REPEAT_MODE_ALL = 1;
     public static final int REPEAT_MODE_THIS = 2;
+
+    public static final String CURRENT_SONG = "";
 
     private Playback playback;
 
@@ -203,6 +210,15 @@ public class MusicService extends Service implements Playback.PlaybackCallbacks 
 
     private void notifyChange(@NonNull final String what) {
         sendBroadcast(new Intent(what));
+        Intent intent = new Intent(this, MusicWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), AppWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(what,"");
+        intent.putExtra(CURRENT_SONG,getCurrentSong());
+        intent.putExtra(ACTION_PLAY_PAUSE,isPlaying());
+        sendBroadcast(intent);
     }
 
     public void updateNotification() {

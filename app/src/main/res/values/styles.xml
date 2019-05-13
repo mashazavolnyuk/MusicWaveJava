@@ -8,8 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/font</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
 
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -17,6 +19,7 @@
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -29,6 +32,28 @@
         <item name="android:layout_height">40dp</item>
         <item name="android:thumb">@drawable/slider_thumb</item>
         <item name="android:thumbOffset">0dp</item>
+    </style>
+
+    <style name="textTitleBig" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/size_title_text</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_margin">@dimen/minimum_margin_between_elements</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="textTitleNormal" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/size_simple_text</item>
+        <item name="android:layout_margin">@dimen/minimum_margin_between_elements</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="widgetButton">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">@dimen/minimum_margin_between_elements</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+
     </style>
 
 </resources>
