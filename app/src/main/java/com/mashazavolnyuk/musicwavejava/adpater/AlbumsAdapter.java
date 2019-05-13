@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.R;
-import com.mashazavolnyuk.musicwavejava.albums.AlbumDetail;
+import com.mashazavolnyuk.musicwavejava.albums.AlbumDetailActivity;
 import com.mashazavolnyuk.musicwavejava.data.Album;
 import com.mashazavolnyuk.musicwavejava.util.MusicUtil;
 import com.squareup.picasso.Picasso;
@@ -48,8 +48,8 @@ public class AlbumsAdapter extends MusicAdapter<AlbumsAdapter.AlbumHolder> {
 
 
     private void showDetail(Album album) {
-        Intent intent = new Intent(activity, AlbumDetail.class);
-        intent.putExtra(AlbumDetail.EXTRA_ALBUM_ID, album);
+        Intent intent = new Intent(activity, AlbumDetailActivity.class);
+        intent.putExtra(AlbumDetailActivity.EXTRA_ALBUM_ID, album);
         activity.startActivity(intent);
     }
 

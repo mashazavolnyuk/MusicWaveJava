@@ -31,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FragmentDetailAlbum extends AbsPlayerFragment {
 
     private Unbinder unbinder;
-    @BindView(R.id.song_list)
+    @BindView(R.id.recycler_view)
     public RecyclerView recyclerViewSongs;
     @BindView(R.id.cover)
     public CircleImageView cover;
@@ -48,7 +48,7 @@ public class FragmentDetailAlbum extends AbsPlayerFragment {
         View view = inflater.inflate(R.layout.fragment_album_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         assert getArguments() != null;
-        album = getArguments().getParcelable(AlbumDetail.EXTRA_ALBUM_ID);
+        album = getArguments().getParcelable(AlbumDetailActivity.EXTRA_ALBUM_ID);
         if (album != null) {
             updateAlbumInfo();
         }

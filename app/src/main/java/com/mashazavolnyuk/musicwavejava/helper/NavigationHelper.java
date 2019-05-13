@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.mashazavolnyuk.musicwavejava.R;
+import com.mashazavolnyuk.musicwavejava.search.SearchResultsActivity;
 
 public class NavigationHelper {
 
@@ -27,4 +28,9 @@ public class NavigationHelper {
         }
     }
 
+    public static void startSearch(Activity activity) {
+        Intent intent = new Intent(activity, SearchResultsActivity.class);
+        activity.startActivity(intent);
+    }
 }
+

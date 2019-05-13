@@ -34,7 +34,7 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".albums.AlbumDetail"
+            android:name=".albums.AlbumDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".search.SearchResultsActivity"
             android:theme="@style/AppTheme"

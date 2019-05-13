@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mashazavolnyuk.musicwavejava.R;
-import com.mashazavolnyuk.musicwavejava.albums.AlbumDetail;
+import com.mashazavolnyuk.musicwavejava.albums.AlbumDetailActivity;
 import com.mashazavolnyuk.musicwavejava.data.Album;
 import com.mashazavolnyuk.musicwavejava.data.Song;
 import com.mashazavolnyuk.musicwavejava.helper.MusicPlayerRemote;
@@ -135,8 +135,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             Object item = dataSet.get(getAdapterPosition());
             switch (getItemViewType()) {
                 case ALBUM:
-                    Intent intent = new Intent(activity, AlbumDetail.class);
-                    intent.putExtra(AlbumDetail.EXTRA_ALBUM_ID, (Album) item);
+                    Intent intent = new Intent(activity, AlbumDetailActivity.class);
+                    intent.putExtra(AlbumDetailActivity.EXTRA_ALBUM_ID, (Album) item);
                     activity.startActivity(intent);
                     break;
                 case SONG:

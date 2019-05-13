@@ -43,11 +43,6 @@
         android:textSize="@dimen/size_title_text"
         android:textStyle="italic" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/song_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+    <include layout="@layout/fragment_recycler_view" />
+
 </LinearLayout>
