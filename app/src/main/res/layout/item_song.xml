@@ -9,8 +9,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/coverSong"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="@dimen/mini_size_cover"
+        android:layout_height="@dimen/mini_size_cover"
         app:civ_border_width="@dimen/minimum_border_circle"
         app:civ_border_color="#FFFFFFFF"
         android:layout_alignParentStart="true"
@@ -23,12 +23,10 @@
         android:id="@+id/song_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/size_title_text"
+        style="@style/textTitleBig"
         android:layout_toEndOf="@id/coverSong"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
         android:layout_marginEnd="@dimen/minimum_margin_between_elements"
-        android:textColor="@color/colorAccent"
-        android:textStyle="normal"
         />
 
     <TextView
@@ -36,11 +34,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/song_title"
+        style="@style/textTitleNormal"
         android:layout_toEndOf="@id/coverSong"
         android:layout_marginStart="@dimen/minimum_margin_between_elements"
         android:layout_marginEnd="@dimen/minimum_margin_between_elements"
-        android:textSize="@dimen/size_simple_text"
-        android:textStyle="italic"
         />
 
 </RelativeLayout>
